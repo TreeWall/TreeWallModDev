@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<DebugType>embedded</DebugType>
+
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>dev</VersionSuffix>
+		<Description>Test Mod.</Description>
+		<Nullable>enable</Nullable>
+		<!-- TreeWall -->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\**\*.*" />
+	</ItemGroup>
+
+	<Import Project="../AmongUs.props" />
+
+	<Target Name="CopyDLLToPlugins" AfterTargets="Build">
+		<Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="C:\Users\amitk\Desktop\Modding among us\BepInEx\plugins" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="false" />
+	</Target>
+</Project>

@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+	
+		<!--  -  -->
+	<!--<string name="TreeWallMod"></string>
+		<string name="TreeWallModIntroBlurb"></string>
+		<string name="TreeWallModTabDescription"></string>-->
+	
+    <!-- Player Colors -->
+     
+    <!-- Cause of Deaths -->
+	<string name="DiedToPsychicGuess">Psyched</string>
+	<string name="DiedToPsychicMisguess">Mispsyched</string>
+	<string name="DiedToSyringe">Cured</string>
+	<string name="DiedToSyringeMisCured">Medical Malpractise</string>
+	<string name="DiedToSyringeSued">Sued</string>
+	<string name="DiedToMarksman">Suppressed</string>
+	<string name="DiedToMarksmanMisguess">Misguessed</string>
+	
+    <!-- Runner - Crewmate Protective -->
+	<string name="TreeWallModRunner">Runner</string>
+	<string name="TreeWallModRunnerIntroBlurb">Run past the imposters!</string>
+	<string name="TreeWallModRunnerTabDescription">Avoid dying by just walking but beware of comms.\%nl\%Use \%b\%Caffeine\%/b\% to boost yourself.</string>
+	
+    <!-- Runner Wiki -->
+     
+    <!-- Runner Options -->
+
+
+	<!-- Psychic - Crewmate Killing -->
+	<string name="TreeWallModPsychic">Psychic</string>
+	<string name="TreeWallModPsychicIntroBlurb">Kill the Killers with your 6th sense.</string>
+	<string name="TreeWallModPsychicTabDescription">Kill players who have killed others in the past 15 secs. \%nl\%But don't accidentally kill your own teamates</string>
+
+	<!-- Psychic Wiki -->
+
+	<!-- Psychic Options -->
+
+
+	<!-- Syringe - Crewmate Power -->
+	<string name="TreeWallModSyringe">Syringe</string>
+	<string name="TreeWallModSyringeIntroBlurb">Cure the Imposters with your needle</string>
+	<string name="TreeWallModSyringeTabDescription">Inject someone, if they kill anyone, they get "cured"</string>
+
+	<!-- Syringe Wiki -->
+	<string name="TreeWallModSyringeWikiDescription">The Syringe is a Crewmate Power Role that can inject Evil Doers to "Cure" (i.e. kill) them when they kill someone. But Be careful to not accidentally inject Crew as they might Die or Become Traitors</string>
+	<string name="TreeWallModSyringeInject">Inject</string>
+	<string name="TreeWallModSyringeInjectWikiDescription">Inject a player. If they're a Evil Doer, kill them when the Evil Doer kills anyone. If they're Crew, either you die along with them, they become a Traitor, or nothing happens</string>
+
+	<!-- Syringe Options -->
+
+
+	<!-- Marksman - Neutral Killing -->
+	<string name="TreeWallModMarksman">Marksman</string>
+	<string name="TreeWallModMarksmanIntroBlurb">Discover Player and gain new abilities.</string>
+	<string name="TreeWallModMarksmanTabDescription">Discover Players and guess them correctly during meetings to gain new abilities. \%nl\%Kill everyone to win!</string>
+
+	<!-- Marksman Wiki -->
+
+	<!-- Marksman Options -->
+</resources>

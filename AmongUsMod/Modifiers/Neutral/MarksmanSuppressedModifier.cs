@@ -1,0 +1,111 @@
+﻿using MiraAPI.Events;
+using MiraAPI.Events.Vanilla.Gameplay;
+using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
+using MiraAPI.Networking;
+using MiraAPI.Utilities;
+using Reactor.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TownOfUs.Networking;
+using TownOfUs.Options.Roles.Impostor;
+using UnityEngine;
+using static Rewired.Demos.CustomPlatform.MyPlatformControllerExtension;
+using static UnityEngine.GraphicsBuffer;
+
+namespace TreeWallMod.Modifiers.Neutral
+{
+	public sealed class MarksmanSuppressedModifier(PlayerControl killer) : BaseModifier
+	{
+		public override string ModifierName => "MarksmanSuppressed";
+		public override bool HideOnUi => true;
+
+		public SpriteRenderer BmOverlay;
+		public PlayerVoteArea VoteArea;
+		public bool Voted;
+		public bool SetAlive { get; set; } = false;
+
+		public PlayerControl Killer { get; } = killer;
+
+		public MurderResultFlags murderResultFlags { get; set; } = MurderResultFlags.Succeeded;
+
+        public override void OnActivate()
+		{
+			base.OnActivate();
+
+            var meetingInstance = MeetingHud.Instance;
+			if (!meetingInstance)
+			{
+				if (Player.AmOwner)
+				{
+					Killer.RpcMeetingMurder(Player, MeetingAnimation.None, causeOfDeath: "Marksman");
+				}
+
+				ModifierComponent!.RemoveModifier(this);
+				return;
+			}
+
+            VoteArea = meetingInstance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Player.PlayerId)!;
+            if (!VoteArea)
+            {
+                if (Player.AmOwner)
+                {
+                    Killer.RpcMeetingMurder(Player, MeetingAnimation.None, causeOfDeath: "Marksman");
+                }
+
+                ModifierComponent!.RemoveModifier(this);
+				return;
+            }
+
+            var beforeMurderEvent = new BeforeMurderEvent(Killer, Player, MeetingCheck.ForMeeting);
+            MiraEventManager.InvokeEvent(beforeMurderEvent);
+            if (!MeetingHud.Instance && !ExileController.Instance)
+            {
+                beforeMurderEvent.Cancel();
+            }
+
+            if (beforeMurderEvent.IsCancelled)
+            {
+                murderResultFlags = MurderResultFlags.FailedError;
+            }
+        }
+
+		public override void FixedUpdate()
+		{
+			base.FixedUpdate();
+			var meetingInstance = MeetingHud.Instance;
+
+			if (!meetingInstance)
+			{
+				return;
+			}
+
+            if (!VoteArea || VoteArea.DidVote || Voted)
+			{
+				return;
+			}
+
+            if (!Player.AmOwner)
+			{
+				return;
+			}
+
+			Message("Skipping");
+			VoteArea.SetVote(252);
+			meetingInstance.Confirm(252);
+			if (VoteArea.DidVote)
+			{
+				Voted = true;
+			}
+		}
+
+   //     public override void OnDeath(DeathReason reason)
+   //     {
+			//ModifierComponent!.RemoveModifier(this);
+   //     }
+	}
+}
