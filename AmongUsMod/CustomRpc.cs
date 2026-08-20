@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TreeWallMod
 {
-	public enum StupidRolesRpcEnum : uint
+	public enum TreeWallModRpcsEnum : uint
 	{
 		ChangeAnimation,
 		CosmeticControl,
@@ -14,6 +14,7 @@ namespace TreeWallMod
 
         AddPlayerSyringeInject,
         RemovePlayerSyringeInject,
-        MarksmanSuppressedComplete
+        MarksmanSuppressedComplete,
+		MarksmanWarp
     }
 }

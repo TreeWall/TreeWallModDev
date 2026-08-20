@@ -68,6 +68,17 @@ namespace TreeWallMod.Events.Neutral
 		}
 
 		[RegisterEvent]
+		public static void StartMeetingEventHandler(StartMeetingEvent @event)
+		{
+			var marksman = PlayerControl.LocalPlayer.GetRole<MarksmanRole>();
+			if (marksman != null)
+			{
+				marksman.WarpMarkedPlayer = null;
+				marksman.WarpMarking = MarksmanWarpState.Marking;
+			}
+		}
+
+		[RegisterEvent]
 		public static void AfterMarksmanSuppresedModifierPlayerMurderHandler(AfterMurderEvent @event)
 		{
 			if (@event.Target.AmOwner && MeetingHud.Instance 

@@ -16,7 +16,7 @@ using Rewired.UI.ControlMapper;
 using System;
 using TownOfUs.Utilities;
 using UnityEngine;
-using static TreeWallMod.Modules.StupidRolesRpc;
+using static TreeWallMod.Modules.TreeWallModRpcs;
 
 namespace TreeWallMod.Events.Modifiers
 {

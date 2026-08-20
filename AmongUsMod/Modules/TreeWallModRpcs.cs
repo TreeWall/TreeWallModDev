@@ -30,9 +30,9 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace TreeWallMod.Modules
 {
-	public static class StupidRolesRpc
+	public static class TreeWallModRpcs
 	{
-		[MethodRpc((uint)StupidRolesRpcEnum.ChangeAnimation)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.ChangeAnimation)]
 		public static void RpcChangeAnimation(this PlayerControl pc, PlayerAnimationClips pac, StoredAnimationClips animation, bool playIdleAnim = false)
 		{
 			Setter[(int)pac](pc.MyPhysics.Animations.group, LoadedAnimationClips[(int)animation]);
@@ -68,13 +68,13 @@ namespace TreeWallMod.Modules
 		};
 
 
-		[MethodRpc((uint)StupidRolesRpcEnum.CosmeticControl)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.CosmeticControl)]
 		public static void RpcCosmeticControl(this PlayerControl pc, bool active)
 		{
 			pc.cosmetics.gameObject.SetActive(active);
 		}
 
-		[MethodRpc((uint)StupidRolesRpcEnum.SurpassChecksDie)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.SurpassChecksDie)]
 		public static void RpcSurpassChecksDie(this PlayerControl player, PlayerControl killer, string? deathReason = null)
 		{
 			string cod = "Killer";
@@ -99,7 +99,7 @@ namespace TreeWallMod.Modules
 			MiraEventManager.InvokeEvent(@event);
 		}
 
-		[MethodRpc((uint)StupidRolesRpcEnum.RemovePlayerSyringeInject)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.RemovePlayerSyringeInject)]
 		public static void RpcRemovePlayerSyringeInject(this PlayerControl injected, PlayerControl syringe)
 		{
 			if (!injected.TryGetModifier<SyringeInjectedModifier>(out var syringeInjectedMod))
@@ -111,7 +111,7 @@ namespace TreeWallMod.Modules
 			Message($"Removed {syringe.name} from {syringeInjectedMod.Player.name}");
 		}
 
-		[MethodRpc((uint)StupidRolesRpcEnum.AddPlayerSyringeInject)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.AddPlayerSyringeInject)]
 		public static void RpcAddPlayerSyringeInject(this PlayerControl injected, PlayerControl syringe)
 		{
 			if (!injected.TryGetModifier<SyringeInjectedModifier>(out var syringeInjectedMod))
@@ -124,7 +124,7 @@ namespace TreeWallMod.Modules
 			Message($"Added {syringe.name} to {syringeInjectedMod.Player.name}");
 		}
 
-		[MethodRpc((uint)StupidRolesRpcEnum.MarksmanSuppressedComplete)]
+		[MethodRpc((uint)TreeWallModRpcsEnum.MarksmanSuppressedComplete)]
 		public static void RpcMarksmanSuppressedComplete(this PlayerControl p, MarksmanSuppressedModifier marksmanSuppressedMod)
 		{
 			//if (!p.TryGetModifier<MarksmanSuppressedModifier>(out var marksmanSuppressedMod))

@@ -52,7 +52,7 @@ namespace TreeWallMod.Options.Roles.Neutral
 		[ModdedNumberOption("Warp mark cooldown", 5f, 60f, 2.5f, MiraNumberSuffixes.Seconds)]
 		public float WarpMarkCd { get; set; } = 25f;
 
-		[ModdedNumberOption("Warp Cooldown after Marking", 5, 20, 2.5f, MiraNumberSuffixes.Seconds)]
+		[ModdedNumberOption("Warp Cooldown after Marking", 5f, 20f, 2.5f, MiraNumberSuffixes.Seconds)]
 		public float WarpCd { get; set; } = 15f;
     }
 
