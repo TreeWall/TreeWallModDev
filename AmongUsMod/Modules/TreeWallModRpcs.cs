@@ -63,8 +63,8 @@ namespace TreeWallMod.Modules
 		{
 			PlayerControl.LocalPlayer.MyPhysics.Animations.group.IdleAnim,
 			PlayerControl.LocalPlayer.MyPhysics.Animations.group.RunAnim,
-			Assets.Assets.headlessIdleAnim.LoadAsset(),
-			Assets.Assets.headlessWalkAnim.LoadAsset()
+			Assets.Assets.HeadlessIdleAnim.LoadAsset(),
+			Assets.Assets.HeadlessWalkAnim.LoadAsset()
 		};
 
 
