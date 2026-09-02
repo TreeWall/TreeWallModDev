@@ -22,7 +22,7 @@ using UnityEngine.ProBuilder;
 
 namespace TreeWallMod.Buttons.Crewmate
 {
-	public sealed class RunnerCaffeine : TownOfUsRoleButton<RunnerRole>
+	public sealed class RunnerCaffeineButton : TownOfUsRoleButton<RunnerRole>
 	{
 		public override string Name => "Caffeine";
 		public override BaseKeybind Keybind => Keybinds.PrimaryAction;

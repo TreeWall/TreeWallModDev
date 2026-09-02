@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Buttons.Neutral.Marksman
 {
-	public sealed class MarksmanMarkWarp : TownOfUsRoleButton<MarksmanRole, PlayerControl>
+	public sealed class MarksmanMarkWarpButton : TownOfUsRoleButton<MarksmanRole, PlayerControl>
 	{
         public override string Name => "Mark";
         public override Color TextOutlineColor => Colors.Marksman;
@@ -40,7 +40,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 
 			marksman.WarpMarking = MarksmanWarpState.Warp;
 
-			CustomButtonSingleton<MarksmanWarp>.Instance.Timer = CustomButtonSingleton<MarksmanWarp>.Instance.Cooldown;
+			CustomButtonSingleton<MarksmanWarpButton>.Instance.Timer = CustomButtonSingleton<MarksmanWarpButton>.Instance.Cooldown;
 
 			marksman.WarpMarkedPlayer = Target!;
         }

@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Buttons.Crewmate
 {
-	public sealed class SyringeInject : TownOfUsRoleButton<SyringeRole, PlayerControl>
+	public sealed class SyringeInjectButton : TownOfUsRoleButton<SyringeRole, PlayerControl>
 	{
 		public override string Name => "Inject";
 		public override BaseKeybind Keybind => Keybinds.PrimaryAction;

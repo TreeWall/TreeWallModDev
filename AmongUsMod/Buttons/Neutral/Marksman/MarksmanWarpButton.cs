@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Buttons.Neutral.Marksman
 {
-    public sealed class MarksmanWarp : TownOfUsRoleButton<MarksmanRole>
+    public sealed class MarksmanWarpButton : TownOfUsRoleButton<MarksmanRole>
     {
         public override string Name => "Warp";
         public override Color TextOutlineColor => TownOfUsColors.Transporter;

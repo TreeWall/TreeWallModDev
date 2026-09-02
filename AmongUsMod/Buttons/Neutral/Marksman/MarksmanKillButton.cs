@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Buttons.Neutral.Marksman
 {
-	public sealed class MarksmanKill : TownOfUsKillRoleButton<MarksmanRole, PlayerControl>, IDiseaseableButton, IKillButton
+	public sealed class MarksmanKillButton : TownOfUsKillRoleButton<MarksmanRole, PlayerControl>, IDiseaseableButton, IKillButton
 	{
 		public override string Name => "Kill";
 		public override BaseKeybind Keybind => Keybinds.PrimaryAction;

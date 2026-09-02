@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Buttons.Crewmate
 {
-	public sealed class PsychicKillGuess : TownOfUsRoleButton<PsychicRole>
+	public sealed class PsychicKillGuessButton : TownOfUsRoleButton<PsychicRole>
 	{
 		public override string Name => "Guess Killer";
 		public override Color TextOutlineColor => new Color32(165, 231, 89, 255);

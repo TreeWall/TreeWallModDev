@@ -74,7 +74,7 @@ namespace TreeWallMod
                         return Assets.Assets.FartKillSound2;
                 }
             },
-            isEnabled: () => OptionGroupSingleton<GeneralOptions>.Instance.FartKill);
+            isEnabled: () => OptionGroupSingleton<TWGeneralOptions>.Instance.FartKill);
         }
 	}
 }
