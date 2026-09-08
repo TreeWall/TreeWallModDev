@@ -33,14 +33,19 @@ namespace TreeWallMod.Options.Roles.Neutral
 
 		public ModdedToggleOption CanVent { get; } = new("Can Vent", true);
 
-		public ModdedEnumOption<MarksmanRoleHintEnum> RoleHint { get; } = new("Role hint", MarksmanRoleHintEnum.Subalignment);
+		public ModdedEnumOption<MarksmanRoleHintEnum> RoleHint { get; } = new("Role hint", MarksmanRoleHintEnum.Subalignment, ["Subalignment", "List Roles", "Doomsayer Hint"]);
 
 		public ModdedNumberOption RoleAmount { get; } = new("Amount of Roles revealed in Role Hint", 7, 2, 7, 1, MiraNumberSuffixes.None)
 		{
 			Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles
 		};
 
-		[ModdedToggleOption("Gets Misguess")]
+        public ModdedToggleOption CanDiscoverTwice { get; } = new("Players can be Discovered more than once", false)
+        {
+            Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles
+        };
+
+        [ModdedToggleOption("Gets Misguess")]
 		public bool MisguessAvailable { get; set; } = true;
 
 		[ModdedNumberOption("Abilities obtained from each guess", 1, 7, 1, MiraNumberSuffixes.None)]

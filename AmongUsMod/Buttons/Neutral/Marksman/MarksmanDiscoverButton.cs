@@ -1,10 +1,8 @@
 ﻿using MiraAPI.GameOptions;
 using MiraAPI.Hud;
-using MiraAPI.Modifiers;
 using MiraAPI.Utilities.Assets;
+using System.Collections.Generic;
 using TownOfUs.Buttons;
-using TreeWallMod.Modifiers.Crewmate;
-using TreeWallMod.Options.Roles.Crewmate;
 using TreeWallMod.Options.Roles.Neutral;
 using TreeWallMod.Roles.Neutral;
 using UnityEngine;
@@ -25,6 +23,8 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 
 		public PlayerControl? FirstTarget { get; set; } = null;
 		public PlayerControl? SecondTarget { get; set; } = null;
+
+		public List<PlayerControl> AlreadyDiscovered = new();
 
 		int Kills = 0;
 		public void KilledPlayer()
@@ -53,7 +53,8 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 			return (
 				base.IsTargetValid(target) && target != null &&
 				(FirstTarget == null || (marksman.UnlockedAbilities.Contains(MarksmanAbility.Dualscover) && SecondTarget == null)) &&
-				(target != FirstTarget && target != SecondTarget));
+				(target != FirstTarget && target != SecondTarget)) &&
+				(!AlreadyDiscovered.Contains(target));
 		}
 
 		public override bool CanUse()

@@ -208,8 +208,10 @@ namespace TreeWallMod.Roles.Neutral
 				meetingMenu.GenButtons(meeting,
 					Player.AmOwner && !Player.HasDied() && !Player.HasModifier<JailedModifier>());
 
-				var firstTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.FirstTarget;
-				var secondTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.SecondTarget;
+				var discoverButton = CustomButtonSingleton<MarksmanDiscoverButton>.Instance;
+
+                var firstTarget = discoverButton.FirstTarget;
+				var secondTarget = discoverButton.SecondTarget;
 
 				if (firstTarget == null && secondTarget == null)
 				{
@@ -219,12 +221,20 @@ namespace TreeWallMod.Roles.Neutral
 				if (firstTarget != null)
 				{
 					MiscUtils.AddFakeChat(Player.Data, "Marksman Info", GenReport(firstTarget), false, true);
-				}
+					if (!OptionGroupSingleton<MarksmanOptions>.Instance.CanDiscoverTwice && OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles)
+					{
+                        discoverButton.AlreadyDiscovered.Add(firstTarget);
+                    }
+                }
 
 				if (secondTarget != null)
 				{
 					MiscUtils.AddFakeChat(Player.Data, "Marksman Info", GenReport(secondTarget), false, true);
-				}
+                    if (!OptionGroupSingleton<MarksmanOptions>.Instance.CanDiscoverTwice && OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles)
+                    {
+                        discoverButton.AlreadyDiscovered.Add(secondTarget);
+                    }
+                }
 			}
 		}
 
