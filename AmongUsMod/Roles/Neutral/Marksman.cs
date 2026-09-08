@@ -47,6 +47,7 @@ using TreeWallMod.Modifiers.Neutral;
 using TreeWallMod.Modules;
 using TreeWallMod.Options.Roles.Neutral;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using static UnityEngine.GraphicsBuffer;
 
 namespace TreeWallMod.Roles.Neutral
@@ -68,6 +69,7 @@ namespace TreeWallMod.Roles.Neutral
 		{
 			MaxRoleCount = 1,
 			IconTmp = TmpSpriteUtils.CreateSpriteAsset(RoleIcons.Marksman.LoadAsset(), "TreeWallMod.Roles.Neutral.Marksman", 1.45f),
+			CanUseVent = OptionGroupSingleton<MarksmanOptions>.Instance.CanVent,
 			Icon = RoleIcons.Marksman,
 			OptionsScreenshot = TouBanners.NeutralRoleBanner,
 			GhostRole = (RoleTypes)RoleId.Get<NeutralGhostRole>()
@@ -105,7 +107,15 @@ namespace TreeWallMod.Roles.Neutral
 					TouAssets.Guess,
 					null!,
 					IsExempt);
-			}
+
+				AddAbility(Player, MarksmanAbility.SharpenedBlade);
+                AddAbility(Player, MarksmanAbility.SmokeBomb);
+                AddAbility(Player, MarksmanAbility.Warp);
+                AddAbility(Player, MarksmanAbility.Vanish);
+				AddAbility(Player, MarksmanAbility.Dismantle);
+                AddAbility(Player, MarksmanAbility.Supressor);
+                AddAbility(Player, MarksmanAbility.Dualscover);
+            }
 		}
 
 		public override void Deinitialize(PlayerControl targetPlayer)
@@ -125,6 +135,67 @@ namespace TreeWallMod.Roles.Neutral
 			}
 		}
 
+		public void FixedUpdate()
+		{
+			if (PlayerControl.LocalPlayer == null || !PlayerControl.LocalPlayer.AmOwner)
+			{
+				return;
+			}
+
+            if (!PlayerControl.LocalPlayer.GetRole<MarksmanRole>())
+            {
+                return;
+            }
+
+            if (WarpMarkedPlayer != null && WarpMarking == MarksmanWarpState.Warp)
+			{
+				byte markedPlayerId = WarpMarkedPlayer.PlayerId;
+
+				var data = GameData.Instance.GetPlayerById(markedPlayerId);
+				if (!data)
+				{
+					WarpMarkedPlayer = null;
+					WarpMarking = MarksmanWarpState.Marking;
+                    return;
+				}
+
+                var stoned = MiscUtils.GetFreshStonedPlayerById(markedPlayerId);
+                if (stoned != null)
+                {
+                    return;
+                }
+
+                var body = Helpers.GetBodyById(markedPlayerId);
+                if (data.IsDead && body)
+                {
+                    return;
+                }
+
+                var pc = data.Object;
+                if (!pc)
+                {
+                    WarpMarkedPlayer = null;
+                    WarpMarking = MarksmanWarpState.Marking;
+                    return;
+                }
+
+                if (pc.moveable || pc.inVent || (pc.TryGetModifier<DisabledModifier>(out var mod) &&
+                                                 (!mod.IsConsideredAlive || !mod.CanBeInteractedWith)))
+                {
+                    return;
+                }
+
+                WarpMarkedPlayer = null;
+                WarpMarking = MarksmanWarpState.Marking;
+                return;
+            }
+			else if (WarpMarkedPlayer == null && WarpMarking == MarksmanWarpState.Warp)
+			{
+                WarpMarkedPlayer = null;
+                WarpMarking = MarksmanWarpState.Marking;
+            }
+		}
+
 		public int IncorrectGuesses { get; set; } = 0;
 		public override void OnMeetingStart()
 		{
@@ -137,8 +208,8 @@ namespace TreeWallMod.Roles.Neutral
 				meetingMenu.GenButtons(meeting,
 					Player.AmOwner && !Player.HasDied() && !Player.HasModifier<JailedModifier>());
 
-				var firstTarget = CustomButtonSingleton<MarksmanDiscover>.Instance.FirstTarget;
-				var secondTarget = CustomButtonSingleton<MarksmanDiscover>.Instance.SecondTarget;
+				var firstTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.FirstTarget;
+				var secondTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.SecondTarget;
 
 				if (firstTarget == null && secondTarget == null)
 				{
@@ -165,8 +236,8 @@ namespace TreeWallMod.Roles.Neutral
 			{
 				meetingMenu.HideButtons();
 
-				CustomButtonSingleton<MarksmanDiscover>.Instance.FirstTarget = null;
-				CustomButtonSingleton<MarksmanDiscover>.Instance.SecondTarget = null;
+				CustomButtonSingleton<MarksmanDiscoverButton>.Instance.FirstTarget = null;
+				CustomButtonSingleton<MarksmanDiscoverButton>.Instance.SecondTarget = null;
 			}
 		}
 
@@ -484,15 +555,22 @@ namespace TreeWallMod.Roles.Neutral
 			}
 		}
 
-		public void AddAbility(PlayerControl target)
+		public void AddAbility(PlayerControl target, MarksmanAbility? ability = null)
 		{
-			//int index = UnityEngine.Random.RandomRangeInt(0, LockedAbilities.Count());
-			int index = 5;
+			int index = UnityEngine.Random.RandomRangeInt(0, LockedAbilities.Count());
 			var opts = OptionGroupSingleton<MarksmanOptions>.Instance;
 
-			if (index > LockedAbilities.Count())
+			Message("Triggered Ability");
+
+			if (index > LockedAbilities.Count() || LockedAbilities.Count() == 0)
 			{
-				return;
+                Message("index more than count, or 0");
+                return;
+			}
+
+			if (ability != null && LockedAbilities.Contains(ability.Value))
+			{
+				index = LockedAbilities.IndexOf(ability.Value);
 			}
 
 			switch (LockedAbilities[index])
@@ -512,6 +590,17 @@ namespace TreeWallMod.Roles.Neutral
 				{
                     var notif1 = Helpers.CreateAndShowNotification(
                         $"Warp was Unlocked! You can now mark a player to Warp to them",
+                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+
+                    notif1.AdjustNotification();
+
+                    break;
+                }
+
+				case MarksmanAbility.Vanish:
+				{
+                    var notif1 = Helpers.CreateAndShowNotification(
+                        $"Vanish was Unlocked! You can now turn yourself mostly invisble",
                         Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
                     notif1.AdjustNotification();
@@ -541,6 +630,8 @@ namespace TreeWallMod.Roles.Neutral
 					break;
 				}
 			}
+
+			Message($"Unlocked {LockedAbilities[index]}");
 
 			UnlockedAbilities.Add(LockedAbilities[index]);
 			LockedAbilities.RemoveAt(index);
@@ -579,9 +670,6 @@ namespace TreeWallMod.Roles.Neutral
 
 				return;
 			}
-
-			var play1 = MiscUtils.PlayerById(player1)!;
-			var play2 = MiscUtils.PlayerById(player2)!;
 
 			var play2pos = GetAdjustedPosition(t2);
 

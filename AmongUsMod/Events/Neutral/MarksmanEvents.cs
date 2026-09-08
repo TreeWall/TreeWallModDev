@@ -38,32 +38,34 @@ namespace TreeWallMod.Events.Neutral
 				return;
 			}
 
-			var button = CustomButtonSingleton<MarksmanDiscover>.Instance;
-			if ((button.FirstTarget != null) && @event.Target == button.FirstTarget && !MeetingHud.Instance)
+			var discoverButton = CustomButtonSingleton<MarksmanDiscoverButton>.Instance;
+			var vanishButton = CustomButtonSingleton<MarksmanVanishButton>.Instance;
+            if ((discoverButton.FirstTarget != null) && @event.Target == discoverButton.FirstTarget && !MeetingHud.Instance)
 			{
-				++button.UsesLeft;
+				++discoverButton.UsesLeft;
 				if ((int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses != 0)
 				{
-					button.SetUses(button.UsesLeft);
+					discoverButton.SetUses(discoverButton.UsesLeft);
 					Message($"Added a use as {@event.Target} died");
 				}
-				button.FirstTarget = null;
+				discoverButton.FirstTarget = null;
 			}
 
-			if ((button.SecondTarget != null) && @event.Target == button.SecondTarget && !MeetingHud.Instance)
+			if ((discoverButton.SecondTarget != null) && @event.Target == discoverButton.SecondTarget && !MeetingHud.Instance)
 			{
-				++button.UsesLeft;
+				++discoverButton.UsesLeft;
 				if ((int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses != 0)
 				{
-					button.SetUses(button.UsesLeft);
+					discoverButton.SetUses(discoverButton.UsesLeft);
 					Message($"Added a use as {@event.Target} died");
 				}
-				button.SecondTarget = null;
+				discoverButton.SecondTarget = null;
 			}
 
 			if (@event.Source.AmOwner)
 			{
-				button.KilledPlayer();
+				discoverButton.KilledPlayer();
+				vanishButton.KilledPlayer();
 			}
 		}
 
@@ -113,5 +115,5 @@ namespace TreeWallMod.Events.Neutral
 				plr.RpcMarksmanSuppressedComplete(marksmanSuppressedMod);
 			}
 		}
-	}
+    }
 }

@@ -17,6 +17,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
         public override float Cooldown => Math.Clamp(OptionGroupSingleton<MarksmanOptions>.Instance.WarpCd + MapCooldown, 5f, 120f);
         public override ButtonLocation Location => ButtonLocation.BottomLeft;
         public override LoadableAsset<Sprite> Sprite => TouRoleIcons.Transporter;
+        public override bool ShouldPauseInVent => false;
 
         public override bool Enabled(RoleBehaviour? role)
         {

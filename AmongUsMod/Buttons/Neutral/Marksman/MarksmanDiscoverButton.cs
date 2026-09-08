@@ -19,8 +19,9 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 		public override int MaxUses => (int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses;
 		public override ButtonLocation Location => ButtonLocation.BottomRight;
 		public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
+        public override bool ShouldPauseInVent => false;
 
-		public override bool UsableInDeath => false;
+        public override bool UsableInDeath => false;
 
 		public PlayerControl? FirstTarget { get; set; } = null;
 		public PlayerControl? SecondTarget { get; set; } = null;

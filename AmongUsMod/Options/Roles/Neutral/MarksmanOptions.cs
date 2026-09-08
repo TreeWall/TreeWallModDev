@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TownOfUs.Options.Roles.Impostor;
 using TreeWallMod.Roles.Crewmate;
 using TreeWallMod.Roles.Neutral;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace TreeWallMod.Options.Roles.Neutral
 			Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses != 0
 		};
 
+		public ModdedToggleOption CanVent { get; } = new("Can Vent", true);
+
 		public ModdedEnumOption<MarksmanRoleHintEnum> RoleHint { get; } = new("Role hint", MarksmanRoleHintEnum.Subalignment);
 
 		public ModdedNumberOption RoleAmount { get; } = new("Amount of Roles revealed in Role Hint", 7, 2, 7, 1, MiraNumberSuffixes.None)
@@ -49,7 +52,23 @@ namespace TreeWallMod.Options.Roles.Neutral
 		[ModdedNumberOption("Sharpened Blade Reduces Kill cooldown by", 5, 10, 0.5f, MiraNumberSuffixes.Seconds)]
 		public float SharpenedBladeKillCdReduction { get; set; } = 7;
 
-		[ModdedNumberOption("Warp mark cooldown", 5f, 60f, 2.5f, MiraNumberSuffixes.Seconds)]
+		[ModdedNumberOption("Vanish Duration", 10f, 90f, 10f, MiraNumberSuffixes.Seconds)]
+		public float VanishDuration { get; set; } = 20f;
+
+		[ModdedNumberOption("Vanish Cooldown", 15f, 75f, 5f, MiraNumberSuffixes.Seconds)]
+		public float VanishCooldown { get; set; } = 35f;
+
+        public ModdedNumberOption InitialVanishUses { get; } = new("Starting Vanish Uses", 0, 0, 15, 1, MiraNumberSuffixes.None, zeroInfinity: true);
+
+        public ModdedNumberOption NewVanishKillsRequired { get; } = new("Kills/Guesses Required for new Vanish use", 2, 1, 3, 1, MiraNumberSuffixes.None)
+        {
+            Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.InitialVanishUses != 0
+        };
+
+        //public ModdedEnumOption CanVent { get; set; } = new("Swooper Can Vent", (int)SwooperVent.Visible, typeof(SwooperVent),
+        //    ["Never", "While Visible", "Always"]);
+
+        [ModdedNumberOption("Warp mark cooldown", 5f, 60f, 2.5f, MiraNumberSuffixes.Seconds)]
 		public float WarpMarkCd { get; set; } = 25f;
 
 		[ModdedNumberOption("Warp Cooldown after Marking", 5f, 20f, 2.5f, MiraNumberSuffixes.Seconds)]

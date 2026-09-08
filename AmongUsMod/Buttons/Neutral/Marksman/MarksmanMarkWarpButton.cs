@@ -16,8 +16,9 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 		public override float Cooldown => Math.Clamp(OptionGroupSingleton<MarksmanOptions>.Instance.WarpMarkCd + MapCooldown, 5f, 120f);
 		public override ButtonLocation Location => ButtonLocation.BottomRight;
 		public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
+        public override bool ShouldPauseInVent => false;
 
-		public override PlayerControl? GetTarget()
+        public override PlayerControl? GetTarget()
 		{
 			return PlayerControl.LocalPlayer.GetClosestLivingPlayer(true, Distance);
 		}
