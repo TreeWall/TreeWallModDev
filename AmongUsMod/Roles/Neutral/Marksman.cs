@@ -75,18 +75,18 @@ namespace TreeWallMod.Roles.Neutral
 			GhostRole = (RoleTypes)RoleId.Get<NeutralGhostRole>()
 		};
 
-        public override void SpawnTaskHeader(PlayerControl playerControl)
-        {
-            if (!playerControl.AmOwner)
-            {
-                return;
-            }
-            ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
-            orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{TouLocale.GetParsed("NeutralKillingTaskHeader")}</color>";
-            orCreateTask.name = "NeutralRoleText";
-        }
+		public override void SpawnTaskHeader(PlayerControl playerControl)
+		{
+			if (!playerControl.AmOwner)
+			{
+				return;
+			}
+			ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
+			orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{TouLocale.GetParsed("NeutralKillingTaskHeader")}</color>";
+			orCreateTask.name = "NeutralRoleText";
+		}
 
-        public readonly List<MarksmanAbility> LockedAbilities   = Enum.GetValues<MarksmanAbility>().ToList();
+		public readonly List<MarksmanAbility> LockedAbilities   = Enum.GetValues<MarksmanAbility>().ToList();
 		public readonly List<MarksmanAbility> UnlockedAbilities = new();
 
 		public MarksmanWarpState WarpMarking { get; set; } = MarksmanWarpState.Marking;
@@ -109,13 +109,13 @@ namespace TreeWallMod.Roles.Neutral
 					IsExempt);
 
 				AddAbility(Player, MarksmanAbility.SharpenedBlade);
-                AddAbility(Player, MarksmanAbility.SmokeBomb);
-                AddAbility(Player, MarksmanAbility.Warp);
-                AddAbility(Player, MarksmanAbility.Vanish);
+				AddAbility(Player, MarksmanAbility.SmokeBomb);
+				AddAbility(Player, MarksmanAbility.Warp);
+				AddAbility(Player, MarksmanAbility.Vanish);
 				AddAbility(Player, MarksmanAbility.Dismantle);
-                AddAbility(Player, MarksmanAbility.Supressor);
-                AddAbility(Player, MarksmanAbility.Dualscover);
-            }
+				AddAbility(Player, MarksmanAbility.Supressor);
+				AddAbility(Player, MarksmanAbility.Dualscover);
+			}
 		}
 
 		public override void Deinitialize(PlayerControl targetPlayer)
@@ -142,12 +142,12 @@ namespace TreeWallMod.Roles.Neutral
 				return;
 			}
 
-            if (!PlayerControl.LocalPlayer.GetRole<MarksmanRole>())
-            {
-                return;
-            }
+			if (!PlayerControl.LocalPlayer.GetRole<MarksmanRole>())
+			{
+				return;
+			}
 
-            if (WarpMarkedPlayer != null && WarpMarking == MarksmanWarpState.Warp)
+			if (WarpMarkedPlayer != null && WarpMarking == MarksmanWarpState.Warp)
 			{
 				byte markedPlayerId = WarpMarkedPlayer.PlayerId;
 
@@ -156,44 +156,44 @@ namespace TreeWallMod.Roles.Neutral
 				{
 					WarpMarkedPlayer = null;
 					WarpMarking = MarksmanWarpState.Marking;
-                    return;
+					return;
 				}
 
-                var stoned = MiscUtils.GetFreshStonedPlayerById(markedPlayerId);
-                if (stoned != null)
-                {
-                    return;
-                }
+				var stoned = MiscUtils.GetFreshStonedPlayerById(markedPlayerId);
+				if (stoned != null)
+				{
+					return;
+				}
 
-                var body = Helpers.GetBodyById(markedPlayerId);
-                if (data.IsDead && body)
-                {
-                    return;
-                }
+				var body = Helpers.GetBodyById(markedPlayerId);
+				if (data.IsDead && body)
+				{
+					return;
+				}
 
-                var pc = data.Object;
-                if (!pc)
-                {
-                    WarpMarkedPlayer = null;
-                    WarpMarking = MarksmanWarpState.Marking;
-                    return;
-                }
+				var pc = data.Object;
+				if (!pc)
+				{
+					WarpMarkedPlayer = null;
+					WarpMarking = MarksmanWarpState.Marking;
+					return;
+				}
 
-                if (pc.moveable || pc.inVent || (pc.TryGetModifier<DisabledModifier>(out var mod) &&
-                                                 (!mod.IsConsideredAlive || !mod.CanBeInteractedWith)))
-                {
-                    return;
-                }
+				if (pc.moveable || pc.inVent || (pc.TryGetModifier<DisabledModifier>(out var mod) &&
+												 (!mod.IsConsideredAlive || !mod.CanBeInteractedWith)))
+				{
+					return;
+				}
 
-                WarpMarkedPlayer = null;
-                WarpMarking = MarksmanWarpState.Marking;
-                return;
-            }
+				WarpMarkedPlayer = null;
+				WarpMarking = MarksmanWarpState.Marking;
+				return;
+			}
 			else if (WarpMarkedPlayer == null && WarpMarking == MarksmanWarpState.Warp)
 			{
-                WarpMarkedPlayer = null;
-                WarpMarking = MarksmanWarpState.Marking;
-            }
+				WarpMarkedPlayer = null;
+				WarpMarking = MarksmanWarpState.Marking;
+			}
 		}
 
 		public int IncorrectGuesses { get; set; } = 0;
@@ -495,34 +495,42 @@ namespace TreeWallMod.Roles.Neutral
 			{
 				var opts = OptionGroupSingleton<MarksmanOptions>.Instance;
 
+				var firstTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.FirstTarget;
+				var secondTarget = CustomButtonSingleton<MarksmanDiscoverButton>.Instance.SecondTarget;
+
 				var playersAlive = PlayerControl.AllPlayerControls.ToArray()
 				.Count(x => !x.HasDied() && !x.IsJailed() && x != Player);
 
-				if (victim == Player)
+                if (victim == Player)
 				{
 					IncorrectGuesses++;
 
-					if (IncorrectGuesses - (opts.MisguessAvailable ? 1 : 0) > 0)
+					if (( firstTarget == null || targetId !=  firstTarget.PlayerId) &&
+                        (secondTarget == null || targetId != secondTarget.PlayerId) ||
+                        (IncorrectGuesses - (opts.MisguessAvailable ? 1 : 0) > 0))
 					{
-						var notif1 = Helpers.CreateAndShowNotification(
-						"That was an incorrect Guess my boi NOW DIE",
-						Color.red, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+                        var notifDeath1 = Helpers.CreateAndShowNotification(
+							"That was an incorrect Guess my boi NOW DIE",
+							Color.red, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-						notif1.AdjustNotification();
+                        notifDeath1.AdjustNotification();
 
-						Player.RpcMeetingMurder(victim, MeetingAnimation.PlayerNameplateAnimation, CustomTouMurderRpcs.GetRandomMeetingAnim(DeathAnimType.Nameplate),
-							causeOfDeath: "MarksmanMisguess");
+                        Player.RpcMeetingMurder(victim, MeetingAnimation.PlayerNameplateAnimation, CustomTouMurderRpcs.GetRandomMeetingAnim(DeathAnimType.Nameplate),
+                            causeOfDeath: "MarksmanMisguess");
 
-						shapeMenu.Close();
+                        shapeMenu.Close();
 						return;
 					}
 
-					var notif2 = Helpers.CreateAndShowNotification(
-						"That was an incorrect Guess my boi",
-						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+                    var notif2 = Helpers.CreateAndShowNotification(
+                        "That was an incorrect Guess my boi",
+                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-					notif2.AdjustNotification();
-				}
+                    notif2.AdjustNotification();
+
+                    shapeMenu.Close();
+					return;
+                }
 				else
 				{
 					if (victim != Player && victim.TryGetModifier<OracleBlessedModifier>(out var oracleMod))
@@ -564,8 +572,8 @@ namespace TreeWallMod.Roles.Neutral
 
 			if (index > LockedAbilities.Count() || LockedAbilities.Count() == 0)
 			{
-                Message("index more than count, or 0");
-                return;
+				Message("index more than count, or 0");
+				return;
 			}
 
 			if (ability != null && LockedAbilities.Contains(ability.Value))
@@ -588,25 +596,25 @@ namespace TreeWallMod.Roles.Neutral
 
 				case MarksmanAbility.Warp:
 				{
-                    var notif1 = Helpers.CreateAndShowNotification(
-                        $"Warp was Unlocked! You can now mark a player to Warp to them",
-                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+					var notif1 = Helpers.CreateAndShowNotification(
+						$"Warp was Unlocked! You can now mark a player to Warp to them",
+						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-                    notif1.AdjustNotification();
+					notif1.AdjustNotification();
 
-                    break;
-                }
+					break;
+				}
 
 				case MarksmanAbility.Vanish:
 				{
-                    var notif1 = Helpers.CreateAndShowNotification(
-                        $"Vanish was Unlocked! You can now turn yourself mostly invisble",
-                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+					var notif1 = Helpers.CreateAndShowNotification(
+						$"Vanish was Unlocked! You can now turn yourself mostly invisble",
+						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-                    notif1.AdjustNotification();
+					notif1.AdjustNotification();
 
-                    break;
-                }
+					break;
+				}
 
 				case MarksmanAbility.Supressor:
 				{
@@ -742,53 +750,53 @@ namespace TreeWallMod.Roles.Neutral
 			}
 		}
 
-        public static void Transport(MonoBehaviour mono, Vector3 position)
-        {
+		public static void Transport(MonoBehaviour mono, Vector3 position)
+		{
 			Message($"Transport({mono.name}, {position}) called");
 
-            var player = mono.TryCast<PlayerControl>();
-            if (player == null)
-            {
+			var player = mono.TryCast<PlayerControl>();
+			if (player == null)
+			{
 				Error("Player is null");
-                return;
-            }
+				return;
+			}
 
-            if (player != null)
-            {
-                player.MyPhysics.ResetMoveState();
-                player.transform.position = position;
-                player.NetTransform.SnapTo(position);
-            }
+			if (player != null)
+			{
+				player.MyPhysics.ResetMoveState();
+				player.transform.position = position;
+				player.NetTransform.SnapTo(position);
+			}
 
-            mono.transform.position = position;
-            Collider2D cd = mono.GetComponent<Collider2D>();
+			mono.transform.position = position;
+			Collider2D cd = mono.GetComponent<Collider2D>();
 
-            var cnt = mono.TryCast<CustomNetworkTransform>();
-            if (cnt != null)
-            {
-                cnt.SnapTo(position, (ushort)(cnt.lastSequenceId + 1));
+			var cnt = mono.TryCast<CustomNetworkTransform>();
+			if (cnt != null)
+			{
+				cnt.SnapTo(position, (ushort)(cnt.lastSequenceId + 1));
 
-                if (cnt.AmOwner && ModCompatibility.IsSubmerged())
-                {
-                    ModCompatibility.ChangeFloor(cnt.myPlayer.GetTruePosition().y > -7);
-                    ModCompatibility.CheckOutOfBoundsElevator(cnt.myPlayer);
-                }
-            }
+				if (cnt.AmOwner && ModCompatibility.IsSubmerged())
+				{
+					ModCompatibility.ChangeFloor(cnt.myPlayer.GetTruePosition().y > -7);
+					ModCompatibility.CheckOutOfBoundsElevator(cnt.myPlayer);
+				}
+			}
 
-            if (player != null && player.AmOwner)
-            {
-                // If the transported player is a Puppeteer/Parasite controlling someone, snap camera to the victim instead
-                MonoBehaviour? cameraTarget = null;
+			if (player != null && player.AmOwner)
+			{
+				// If the transported player is a Puppeteer/Parasite controlling someone, snap camera to the victim instead
+				MonoBehaviour? cameraTarget = null;
 
-                if (player.Data?.Role is ITransportTrigger triggerRole)
-                {
-                    cameraTarget = triggerRole.OnTransport();
-                }
+				if (player.Data?.Role is ITransportTrigger triggerRole)
+				{
+					cameraTarget = triggerRole.OnTransport();
+				}
 
-                MiscUtils.SnapPlayerCamera(cameraTarget ?? PlayerControl.LocalPlayer);
-            }
-        }
-    }
+				MiscUtils.SnapPlayerCamera(cameraTarget ?? PlayerControl.LocalPlayer);
+			}
+		}
+	}
 
 	public enum MarksmanAbility
 	{
