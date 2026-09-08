@@ -52,7 +52,8 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 
 			return (
 				base.IsTargetValid(target) && target != null &&
-				(FirstTarget == null || (marksman.UnlockedAbilities.Contains(MarksmanAbility.Dualscover) && SecondTarget == null)));
+				(FirstTarget == null || (marksman.UnlockedAbilities.Contains(MarksmanAbility.Dualscover) && SecondTarget == null)) &&
+				(target != FirstTarget && target != SecondTarget));
 		}
 
 		public override bool CanUse()

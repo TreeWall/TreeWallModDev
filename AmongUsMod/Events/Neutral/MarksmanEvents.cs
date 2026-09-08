@@ -46,7 +46,6 @@ namespace TreeWallMod.Events.Neutral
 				if ((int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses != 0)
 				{
 					discoverButton.SetUses(discoverButton.UsesLeft);
-					Message($"Added a use as {@event.Target} died");
 				}
 				discoverButton.FirstTarget = null;
 			}
@@ -57,7 +56,6 @@ namespace TreeWallMod.Events.Neutral
 				if ((int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses != 0)
 				{
 					discoverButton.SetUses(discoverButton.UsesLeft);
-					Message($"Added a use as {@event.Target} died");
 				}
 				discoverButton.SecondTarget = null;
 			}
