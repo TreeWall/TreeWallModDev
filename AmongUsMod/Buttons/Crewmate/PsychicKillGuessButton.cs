@@ -36,7 +36,7 @@ namespace TreeWallMod.Buttons.Crewmate
 		public override bool UsableInDeath => false;
 		public override float EffectDuration => 3.0f;
 
-		private PlayerControl Victim;
+		private PlayerControl? Victim;
 
 		public override void ClickHandler()
 		{
@@ -65,12 +65,12 @@ namespace TreeWallMod.Buttons.Crewmate
 				PlayerControl.LocalPlayer.cosmetics.currentBodySprite.BodySprite.material;
 
 			player1Menu.Begin(
-				plr => !(plr.HasDied() || (plr.TryGetModifier<DisabledModifier>(out var mod) && (!mod.IsConsideredAlive || !mod.CanBeInteractedWith))),
+				plr => !plr.Data.Disconnected && (!plr.Data.IsDead || !plr.DiedOtherRound()),
 				plr =>
 				{
 					player1Menu.ForceClose();
 
-					if (plr == null || plr.Data.IsDead || plr.Data.Disconnected)
+					if (plr == null || plr.Data.Disconnected || MeetingHud.Instance)
 					{
 						return;
 					}
@@ -81,7 +81,8 @@ namespace TreeWallMod.Buttons.Crewmate
 				});
 			foreach (var panel in player1Menu.potentialVictims)
 			{
-				if (panel.NameText.text != PlayerControl.LocalPlayer.Data.PlayerName)
+                panel.PlayerIcon.cosmetics.SetPhantomRoleAlpha(1f);
+                if (panel.NameText.text != PlayerControl.LocalPlayer.Data.PlayerName)
 				{
 					panel.NameText.color = Color.white;
 				}
@@ -90,7 +91,7 @@ namespace TreeWallMod.Buttons.Crewmate
 
 		public override void OnEffectEnd()
 		{
-			if (Victim.HasDied() || (Victim.TryGetModifier<DisabledModifier>(out var mod) && (!mod.IsConsideredAlive || !mod.CanBeInteractedWith)))
+			if (Victim == null || Victim.HasDied() || (Victim.TryGetModifier<DisabledModifier>(out var mod) && (!mod.IsConsideredAlive || !mod.CanBeInteractedWith)) || MeetingHud.Instance)
 			{
 				return;
 			}
