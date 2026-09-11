@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TownOfUs;
 using TownOfUs.Buttons;
 using TownOfUs.Modifiers.Impostor;
+using TownOfUs.Options.Roles.Impostor;
 using TreeWallMod.Modifiers.Neutral;
 using TreeWallMod.Options.Roles.Neutral;
 using TreeWallMod.Roles.Neutral;
@@ -19,6 +20,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
         public override string Name => "Smokebomb";
         public override Color TextOutlineColor => Colors.Marksman;
         public override float Cooldown => Mathf.Clamp(OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombCd + MapCooldown, 5f, 120f);
+        public override float EffectDuration => OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombDuration;
         public override int MaxUses => (int)OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombUses;
         public override ButtonLocation Location => ButtonLocation.BottomLeft;
         public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
