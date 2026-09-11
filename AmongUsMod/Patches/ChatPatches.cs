@@ -57,6 +57,23 @@ namespace TreeWallMod.Patches
 
                 return false;
             }
+            else if (textRegular.StartsWith("/debug", StringComparison.OrdinalIgnoreCase))
+            {
+                var cam = Camera.main;
+                var z = -89f;
+                var bottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.WorldToScreenPoint(new Vector3(0, 0, z)).z));
+                var topRight = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.WorldToScreenPoint(new Vector3(0, 0, z)).z));
+
+                string outputString = $"Orthographic: {cam.orthographic}, Size: {cam.orthographicSize}, Aspect: {cam.aspect}, Position: {cam.transform.position}, Bottom Left: {bottomLeft}, Top Right: {topRight}";
+
+                //Message($"Orthographic: {cam.orthographic}, Size: {cam.orthographicSize}, Aspect: {cam.aspect}, Position: {cam.transform.position}, Bottom Left: {bottomLeft}, Top Right: {topRight}");
+                Message(outputString);
+
+                MiscUtils.AddSystemChat(PlayerControl.LocalPlayer.Data, systemName,
+                        $"{outputString}");
+
+                ClearChat(__instance);
+            }
 
             return true;
         }

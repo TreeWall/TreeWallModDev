@@ -30,8 +30,8 @@ namespace TreeWallMod.Modifiers.Neutral
 		public VisualAppearance GetVisualAppearance()
 		{
 			var playerColor = (PlayerControl.LocalPlayer == Player || (PlayerControl.LocalPlayer.DiedOtherRound() && OptionGroupSingleton<GeneralOptions>.Instance.TheDeadKnow))
-				? new Color(1f, 1f, 1f, 0.05f)
-				: new Color(1f, 1f, 1f, 0.05f);
+				? new Color(1f, 1f, 1f, 0.005f)
+				: new Color(1f, 1f, 1f, 0.005f);
 
 			return new VisualAppearance(Player.GetDefaultModifiedAppearance(), TownOfUsAppearances.Swooper)
 			{

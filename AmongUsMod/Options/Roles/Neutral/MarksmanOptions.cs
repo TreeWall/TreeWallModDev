@@ -57,7 +57,19 @@ namespace TreeWallMod.Options.Roles.Neutral
 		[ModdedNumberOption("Sharpened Blade Reduces Kill cooldown by", 5, 10, 0.5f, MiraNumberSuffixes.Seconds)]
 		public float SharpenedBladeKillCdReduction { get; set; } = 7;
 
-		[ModdedNumberOption("Vanish Duration", 10f, 90f, 10f, MiraNumberSuffixes.Seconds)]
+        [ModdedNumberOption("Smokebomb uses per round", 0, 5, 1, MiraNumberSuffixes.None)]
+        public float SmokebombUses { get; set; } = 2;
+
+		[ModdedNumberOption("Smnokebomb Cooldown", 15f, 30f, 5f, MiraNumberSuffixes.Seconds)]
+		public float SmokebombCd { get; set; } = 20f;
+
+        [ModdedNumberOption("Smnokebomb Duration", 5f, 20f, 1f, MiraNumberSuffixes.Seconds)]
+        public float SmokebombDuration { get; set; } = 10f;
+
+        [ModdedNumberOption("Smnokebomb Radius", 0.25f, 5f, 0.25f, MiraNumberSuffixes.Multiplier)]
+        public float SmokebombRadius { get; set; } = 1f;
+
+        [ModdedNumberOption("Vanish Duration", 10f, 90f, 10f, MiraNumberSuffixes.Seconds)]
 		public float VanishDuration { get; set; } = 20f;
 
 		[ModdedNumberOption("Vanish Cooldown", 15f, 75f, 5f, MiraNumberSuffixes.Seconds)]

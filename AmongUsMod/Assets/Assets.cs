@@ -19,5 +19,10 @@ namespace TreeWallMod.Assets
         public static LoadableAudioResourceAsset FartKillSound1 { get; } = new LoadableAudioResourceAsset($"{ShortPath}.Audio.FartKill1.wav");
         public static LoadableAudioResourceAsset FartKillSound2 { get; } = new LoadableAudioResourceAsset($"{ShortPath}.Audio.FartKill2.wav");
         public static LoadableAudioResourceAsset FartKillSound3 { get; } = new LoadableAudioResourceAsset($"{ShortPath}.Audio.FartKill3.wav");
+
+        public static LoadableAsset<Sprite> Cloud_1 { get; } = new LoadableResourceAsset($"{ShortPath}.Cloud_1.png");
+        public static LoadableAsset<Sprite> Cloud_2 { get; } = new LoadableResourceAsset($"{ShortPath}.Cloud_2.png");
+        public static LoadableAsset<Sprite> Cloud_3 { get; } = new LoadableResourceAsset($"{ShortPath}.Cloud_3.png");
+        public static LoadableAsset<Sprite> Cloud_4 { get; } = new LoadableResourceAsset($"{ShortPath}.Cloud_4.png");
     }
 }

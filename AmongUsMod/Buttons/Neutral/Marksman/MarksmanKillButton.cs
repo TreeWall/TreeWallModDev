@@ -1,4 +1,5 @@
 ﻿using MiraAPI.GameOptions;
+using MiraAPI.Modifiers;
 using MiraAPI.Networking;
 using MiraAPI.Utilities.Assets;
 using Reactor.Networking.Attributes;
@@ -12,6 +13,7 @@ using TownOfUs.Buttons;
 using TownOfUs.Options.Modifiers.Alliance;
 using TownOfUs.Options.Roles.Neutral;
 using TownOfUs.Roles.Neutral;
+using TreeWallMod.Modifiers.Neutral;
 using TreeWallMod.Options.Roles.Neutral;
 using TreeWallMod.Roles.Neutral;
 using UnityEngine;
@@ -51,7 +53,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 
 		public override bool CanUse()
 		{
-			return base.CanUse();
+			return (base.CanUse() && !PlayerControl.LocalPlayer.HasModifier<MarksmanVanishModifier>());
 		}
 
 		protected override void OnClick()

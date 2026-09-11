@@ -13,8 +13,8 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
 	{
 		public override string Name => "Discover";
 		public override Color TextOutlineColor => Colors.Marksman;
-		public override float Cooldown => OptionGroupSingleton<MarksmanOptions>.Instance.DiscoverCd;
-		public override int MaxUses => (int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses;
+		public override float Cooldown => Mathf.Clamp(OptionGroupSingleton<MarksmanOptions>.Instance.DiscoverCd + MapCooldown, 5f, 120f);
+        public override int MaxUses => (int)OptionGroupSingleton<MarksmanOptions>.Instance.InitialDiscoverUses;
 		public override ButtonLocation Location => ButtonLocation.BottomRight;
 		public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
         public override bool ShouldPauseInVent => false;
