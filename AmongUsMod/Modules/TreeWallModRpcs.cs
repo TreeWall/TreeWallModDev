@@ -158,7 +158,7 @@ namespace TreeWallMod.Modules
 			}
 			else
 			{
-                marksmanSuppressedMod.VoteArea.SetDead(marksmanSuppressedMod.VoteArea.DidReport, false);
+                marksmanSuppressedMod.VoteArea.SetDead(false);
             }
 
 			if (PlayerControl.LocalPlayer.IsHost())

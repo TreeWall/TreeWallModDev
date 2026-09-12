@@ -49,7 +49,7 @@ namespace TreeWallMod.Modifiers.Neutral
 				return;
 			}
 
-            VoteArea = meetingInstance.playerStates.FirstOrDefault(x => x.TargetPlayerId == Player.PlayerId)!;
+            VoteArea = meetingInstance.playerStates.FirstOrDefault(x => x.PlayerId == Player.PlayerId)!;
             if (!VoteArea)
             {
                 if (Player.AmOwner)
