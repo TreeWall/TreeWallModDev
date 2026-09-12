@@ -60,27 +60,14 @@ namespace TreeWallMod.Options.Roles.Neutral
         [ModdedNumberOption("Smokebomb uses per round", 0, 5, 1, MiraNumberSuffixes.None)]
         public float SmokebombUses { get; set; } = 2;
 
-		[ModdedNumberOption("Smnokebomb Cooldown", 15f, 30f, 5f, MiraNumberSuffixes.Seconds)]
+		[ModdedNumberOption("Smokebomb Cooldown", 15f, 30f, 5f, MiraNumberSuffixes.Seconds)]
 		public float SmokebombCd { get; set; } = 20f;
 
-        [ModdedNumberOption("Smnokebomb Duration", 5f, 20f, 1f, MiraNumberSuffixes.Seconds)]
+        [ModdedNumberOption("Smokebomb Duration", 5f, 20f, 1f, MiraNumberSuffixes.Seconds)]
         public float SmokebombDuration { get; set; } = 10f;
 
-        [ModdedNumberOption("Smnokebomb Radius", 0.25f, 5f, 0.25f, MiraNumberSuffixes.Multiplier)]
+        [ModdedNumberOption("Smokebomb Radius", 0.25f, 5f, 0.25f, MiraNumberSuffixes.Multiplier)]
         public float SmokebombRadius { get; set; } = 1f;
-
-        [ModdedNumberOption("Vanish Duration", 10f, 90f, 10f, MiraNumberSuffixes.Seconds)]
-		public float VanishDuration { get; set; } = 20f;
-
-		[ModdedNumberOption("Vanish Cooldown", 15f, 75f, 5f, MiraNumberSuffixes.Seconds)]
-		public float VanishCooldown { get; set; } = 35f;
-
-        public ModdedNumberOption InitialVanishUses { get; } = new("Starting Vanish Uses", 0, 0, 15, 1, MiraNumberSuffixes.None, zeroInfinity: true);
-
-        public ModdedNumberOption NewVanishKillsRequired { get; } = new("Kills/Guesses Required for new Vanish use", 2, 1, 3, 1, MiraNumberSuffixes.None)
-        {
-            Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.InitialVanishUses != 0
-        };
 
         //public ModdedEnumOption CanVent { get; set; } = new("Swooper Can Vent", (int)SwooperVent.Visible, typeof(SwooperVent),
         //    ["Never", "While Visible", "Always"]);
@@ -90,6 +77,25 @@ namespace TreeWallMod.Options.Roles.Neutral
 
 		[ModdedNumberOption("Warp Cooldown after Marking", 5f, 20f, 2.5f, MiraNumberSuffixes.Seconds)]
 		public float WarpCd { get; set; } = 15f;
+
+        [ModdedNumberOption("Vanish Duration", 10f, 90f, 10f, MiraNumberSuffixes.Seconds)]
+        public float VanishDuration { get; set; } = 20f;
+
+        [ModdedNumberOption("Vanish Cooldown", 15f, 75f, 5f, MiraNumberSuffixes.Seconds)]
+        public float VanishCooldown { get; set; } = 35f;
+
+        public ModdedNumberOption InitialVanishUses { get; } = new("Starting Vanish Uses", 0, 0, 15, 1, MiraNumberSuffixes.None, zeroInfinity: true);
+
+        public ModdedNumberOption NewVanishKillsRequired { get; } = new("Kills/Guesses Required for new Vanish use", 2, 1, 3, 1, MiraNumberSuffixes.None)
+        {
+            Visible = () => OptionGroupSingleton<MarksmanOptions>.Instance.InitialVanishUses != 0
+        };
+
+		[ModdedNumberOption("Dismantle Cooldown", 15f, 60f, 10f, MiraNumberSuffixes.Seconds)]
+		public float DismantleCd { get; set; } = 25f;
+
+        [ModdedNumberOption("Dismantle Delay", 1f, 10f, 1f, MiraNumberSuffixes.Seconds)]
+        public float DismantleDelay { get; set; } = 3f;
     }
 
 	public enum MarksmanRoleHintEnum

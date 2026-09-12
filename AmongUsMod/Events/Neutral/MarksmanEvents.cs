@@ -75,7 +75,10 @@ namespace TreeWallMod.Events.Neutral
 			{
 				marksman.WarpMarkedPlayer = null;
 				marksman.WarpMarking = MarksmanWarpState.Marking;
-			}
+
+				var smokebombButton = CustomButtonSingleton<MarksmanSmokebombButton>.Instance;
+				smokebombButton.SetUses((int)OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombUses);
+            }
 		}
 
 		[RegisterEvent]

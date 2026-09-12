@@ -28,6 +28,12 @@ namespace TreeWallMod.Patches
         [HarmonyPatch(typeof(ChatController), nameof(ChatController.SendChat))]
         public static bool FPrefix(ChatController __instance)
         {
+            // this patch only works in dev builds
+            if (!TreeWallModPlugin.IsDevBuild)
+            {
+                return true;
+            }
+
             var text = __instance.freeChatField.Text.ToLower(TownOfUsPlugin.Culture);
             var textRegular = __instance.freeChatField.Text.WithoutRichText();
 
