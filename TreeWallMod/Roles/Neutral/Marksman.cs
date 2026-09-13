@@ -55,15 +55,10 @@ namespace TreeWallMod.Roles.Neutral
 {
 	public sealed class MarksmanRole(IntPtr cppPtr) : NeutralRole(cppPtr), ITownOfUsRole, IWikiDiscoverable, IDoomable, ICrewVariant
 	{
-		//public string LocaleKey => "Marksman";
-		//      public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
-		//      public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
-		//      public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
-
 		public string IdPart => "Marksman";
-        string ICustomRole.IdPrefix => "TreeWallMod.Role";
+		string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
-        public RoleBehaviour CrewVariant => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<SeerRole>());
+		public RoleBehaviour CrewVariant => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<SeerRole>());
 		public Color RoleColor => Colors.Marksman;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Custom;
 		public RoleAlignment RoleAlignment => RoleAlignment.NeutralKilling;
@@ -81,14 +76,14 @@ namespace TreeWallMod.Roles.Neutral
 
 		public override void SpawnTaskHeader(PlayerControl playerControl)
 		{
-            if (!playerControl.AmOwner)
-            {
-                return;
-            }
-            ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
-            orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{MiraLocaleManager.Get("NeutralKillingTaskHeader")}</color>";
-            orCreateTask.name = "NeutralRoleText";
-        }
+			if (!playerControl.AmOwner)
+			{
+				return;
+			}
+			ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
+			orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{MiraLocaleManager.Get("NeutralKillingTaskHeader")}</color>";
+			orCreateTask.name = "NeutralRoleText";
+		}
 
 		public readonly List<MarksmanAbility> LockedAbilities   = Enum.GetValues<MarksmanAbility>().ToList();
 		public readonly List<MarksmanAbility> UnlockedAbilities = new();
@@ -112,18 +107,18 @@ namespace TreeWallMod.Roles.Neutral
 					null!,
 					IsExempt);
 
-                if (!LegacyAssets.IsLegacy)
-                {
-                    HudManager.Instance.ImpostorVentButton.buttonLabelText.SetOutlineColor(Colors.Marksman);
-                }
+				if (!LegacyAssets.IsLegacy)
+				{
+					HudManager.Instance.ImpostorVentButton.buttonLabelText.SetOutlineColor(Colors.Marksman);
+				}
 
-                AddAbility(Player, MarksmanAbility.SharpenedBlade);
-				AddAbility(Player, MarksmanAbility.SmokeBomb);
-				AddAbility(Player, MarksmanAbility.Warp);
-				AddAbility(Player, MarksmanAbility.Vanish);
-				AddAbility(Player, MarksmanAbility.Dismantle);
-				AddAbility(Player, MarksmanAbility.Supressor);
-				AddAbility(Player, MarksmanAbility.Dualscover);
+				//AddAbility(Player, MarksmanAbility.SharpenedBlade);
+				//AddAbility(Player, MarksmanAbility.SmokeBomb);
+				//AddAbility(Player, MarksmanAbility.Warp);
+				//AddAbility(Player, MarksmanAbility.Vanish);
+				//AddAbility(Player, MarksmanAbility.Dismantle);
+				//AddAbility(Player, MarksmanAbility.Supressor);
+				//AddAbility(Player, MarksmanAbility.Dualscover);
 			}
 		}
 
@@ -214,7 +209,7 @@ namespace TreeWallMod.Roles.Neutral
 
 				var discoverButton = CustomButtonSingleton<MarksmanDiscoverButton>.Instance;
 
-                var firstTarget = discoverButton.FirstTarget;
+				var firstTarget = discoverButton.FirstTarget;
 				var secondTarget = discoverButton.SecondTarget;
 
 				if (firstTarget == null && secondTarget == null)
@@ -227,18 +222,18 @@ namespace TreeWallMod.Roles.Neutral
 					MiscUtils.AddFakeChat(Player.Data, "Marksman Info", GenReport(firstTarget), false, true);
 					if (!OptionGroupSingleton<MarksmanOptions>.Instance.CanDiscoverTwice && OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles)
 					{
-                        discoverButton.AlreadyDiscovered.Add(firstTarget);
-                    }
-                }
+						discoverButton.AlreadyDiscovered.Add(firstTarget);
+					}
+				}
 
 				if (secondTarget != null)
 				{
 					MiscUtils.AddFakeChat(Player.Data, "Marksman Info", GenReport(secondTarget), false, true);
-                    if (!OptionGroupSingleton<MarksmanOptions>.Instance.CanDiscoverTwice && OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles)
-                    {
-                        discoverButton.AlreadyDiscovered.Add(secondTarget);
-                    }
-                }
+					if (!OptionGroupSingleton<MarksmanOptions>.Instance.CanDiscoverTwice && OptionGroupSingleton<MarksmanOptions>.Instance.RoleHint == MarksmanRoleHintEnum.ListRoles)
+					{
+						discoverButton.AlreadyDiscovered.Add(secondTarget);
+					}
+				}
 			}
 		}
 
@@ -369,10 +364,10 @@ namespace TreeWallMod.Roles.Neutral
 					hintType = doomableRole.DoomHintType;
 				}
 
-                var fallback = MiraLocaleManager.Get("TownOfUsMira.Role.DoomsayerRoleHintDefault");
-                var hint = MiraLocaleManager.Get($"TownOfUsMira.Role.DoomsayerRoleHint{hintType}");
+				var fallback = MiraLocaleManager.Get("TownOfUsMira.Role.DoomsayerRoleHintDefault");
+				var hint = MiraLocaleManager.Get($"TownOfUsMira.Role.DoomsayerRoleHint{hintType}");
 
-                if (hint.Contains("STRMISS"))
+				if (hint.Contains("STRMISS"))
 				{
 					reportBuilder.AppendLine(TownOfUsPlugin.Culture,
 						$"{fallback.Replace("<player>", target.name)}\n");
@@ -515,36 +510,36 @@ namespace TreeWallMod.Roles.Neutral
 				var playersAlive = PlayerControl.AllPlayerControls.ToArray()
 				.Count(x => !x.HasDied() && !x.IsJailed() && x != Player);
 
-                if (victim == Player)
+				if (victim == Player)
 				{
 					IncorrectGuesses++;
 
 					if (( firstTarget == null || targetId !=  firstTarget.PlayerId) &&
-                        (secondTarget == null || targetId != secondTarget.PlayerId) ||
-                        (IncorrectGuesses - (opts.MisguessAvailable ? 1 : 0) > 0))
+						(secondTarget == null || targetId != secondTarget.PlayerId) ||
+						(IncorrectGuesses - (opts.MisguessAvailable ? 1 : 0) > 0))
 					{
-                        var notifDeath1 = Helpers.CreateAndShowNotification(
+						var notifDeath1 = Helpers.CreateAndShowNotification(
 							"That was an incorrect Guess NOW DIE",
 							Color.red, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-                        notifDeath1.AdjustNotification();
+						notifDeath1.AdjustNotification();
 
-                        Player.RpcMeetingMurder(victim, MeetingAnimation.PlayerNameplateAnimation, CustomTouMurderRpcs.GetRandomMeetingAnim(DeathAnimType.Nameplate),
-                            causeOfDeath: "MarksmanMisguess");
+						Player.RpcMeetingMurder(victim, MeetingAnimation.PlayerNameplateAnimation, CustomTouMurderRpcs.GetRandomMeetingAnim(DeathAnimType.Nameplate),
+							causeOfDeath: "MarksmanMisguess");
 
-                        shapeMenu.Close();
+						shapeMenu.Close();
 						return;
 					}
 
-                    var notif2 = Helpers.CreateAndShowNotification(
-                        $"That was an incorrect Guess, Incorrect Guesses Left: {(opts.MisguessAvailable ? 1 : 0) - IncorrectGuesses}",
-                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+					var notif2 = Helpers.CreateAndShowNotification(
+						$"That was an incorrect Guess, Incorrect Guesses Left: {(opts.MisguessAvailable ? 1 : 0) - IncorrectGuesses}",
+						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
-                    notif2.AdjustNotification();
+					notif2.AdjustNotification();
 
-                    shapeMenu.Close();
+					shapeMenu.Close();
 					return;
-                }
+				}
 				else
 				{
 					if (victim != Player && victim.TryGetModifier<OracleBlessedModifier>(out var oracleMod))
@@ -568,7 +563,7 @@ namespace TreeWallMod.Roles.Neutral
 						Player.RpcMeetingMurder(victim, MeetingAnimation.PlayerNameplateAnimation, CustomTouMurderRpcs.GetRandomMeetingAnim(DeathAnimType.Nameplate),
 							causeOfDeath: "Marksman");
 					}
-					AddAbility(victim);
+					for (int i = 0; i < opts.AbilitiesEachGuess; i++) { AddAbility(victim); }
 
 					meetingMenu?.HideSingle(targetId);
 				}
@@ -590,6 +585,11 @@ namespace TreeWallMod.Roles.Neutral
 				return;
 			}
 
+			if (opts.AbilityCap <= UnlockedAbilities.Count)
+			{
+				return;
+			}
+
 			if (ability != null && LockedAbilities.Contains(ability.Value))
 			{
 				index = LockedAbilities.IndexOf(ability.Value);
@@ -608,7 +608,18 @@ namespace TreeWallMod.Roles.Neutral
 					break;
 				}
 
-				case MarksmanAbility.Warp:
+                case MarksmanAbility.SmokeBomb:
+                {
+                    var notif1 = Helpers.CreateAndShowNotification(
+                        $"Smokebomb was Unlocked! You can now blind players in a set radius, this is not like grenadier, this has smoke",
+                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+
+                    notif1.AdjustNotification();
+
+                    break;
+                }
+
+                case MarksmanAbility.Warp:
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Warp was Unlocked! You can now mark a player to Warp to them",
@@ -630,7 +641,18 @@ namespace TreeWallMod.Roles.Neutral
 					break;
 				}
 
-				case MarksmanAbility.Supressor:
+                case MarksmanAbility.Dismantle:
+                {
+                    var notif1 = Helpers.CreateAndShowNotification(
+                        $"Dismantle was Unlocked! You can now make a Player unable to move, use abilities or SEE :D, but you only have 1 use!",
+                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+
+                    notif1.AdjustNotification();
+
+                    break;
+                }
+
+                case MarksmanAbility.Supressor:
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Supressor was Unlocked! You can now guess people without anyone else knowing.",
