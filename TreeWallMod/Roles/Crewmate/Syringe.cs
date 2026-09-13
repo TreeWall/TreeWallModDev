@@ -24,12 +24,13 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class SyringeRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IDoomable, ILoyalCrewmate
 	{
-		//public string LocaleKey => "Syringe";
-		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+        //public string LocaleKey => "Syringe";
+        //      public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
+        //      public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
+        //      public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
 
-		public string IdPart => "Syringe";
+        public string IdPart => "Syringe";
+		string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
         public bool IsPowerCrew => false;
 		public Color RoleColor => Colors.Syringe;
@@ -45,7 +46,7 @@ namespace TreeWallMod.Roles.Crewmate
 		public string GetAdvancedDescription()
 		{
 			return
-                MiraLocaleManager.Get($"TreeWallMod{IdPart}WikiDescription") +
+                MiraLocaleManager.Get($"TreeWallMod.Role.{IdPart}.WikiDescription") +
 				MiscUtils.AppendOptionsText(GetType());
 		}
 
@@ -56,8 +57,8 @@ namespace TreeWallMod.Roles.Crewmate
 			{
 				return new List<CustomButtonWikiDescription>
 				{
-					new(MiraLocaleManager.Get($"TreeWallMod{IdPart}Inject", "Inject"),
-                        MiraLocaleManager.Get($"TreeWallMod{IdPart}InjectWikiDescription"),
+					new(MiraLocaleManager.Get($"TreeWallMod.Role.{IdPart}Inject", "Inject"),
+                        MiraLocaleManager.Get($"TreeWallMod.Role.{IdPart}Inject.WikiDescription"),
 						CrewAssets.SyringeInjectSprite),
 				};
 			}

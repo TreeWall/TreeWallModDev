@@ -1,9 +1,4 @@
 using AmongUs.GameOptions;
-using TreeWallMod.Assets;
-using TreeWallMod.Buttons.Crewmate;
-using TreeWallMod.Modifiers.Crewmate;
-using TreeWallMod.Modules;
-using TreeWallMod.Options.Roles.Crewmate;
 using Il2CppInterop.Runtime.Attributes;
 using InnerNet;
 using MiraAPI.GameOptions;
@@ -12,6 +7,7 @@ using MiraAPI.LocalSettings;
 using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Translation;
 using MiraAPI.Utilities;
 using Mono.Cecil;
 using Reactor.Utilities;
@@ -28,6 +24,11 @@ using TownOfUs.Roles;
 using TownOfUs.Roles.Crewmate;
 using TownOfUs.Roles.Neutral;
 using TownOfUs.Utilities;
+using TreeWallMod.Assets;
+using TreeWallMod.Buttons.Crewmate;
+using TreeWallMod.Modifiers.Crewmate;
+using TreeWallMod.Modules;
+using TreeWallMod.Options.Roles.Crewmate;
 using UnityEngine;
 
 
@@ -35,14 +36,15 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class RunnerRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IUnguessable, IDoomable
     {
-		//public string LocaleKey => "Runner";
-		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+        //public string LocaleKey => "Runner";
+        //public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
+        //public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
+        //public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
 
-		public string IdPart => "Runner";
+        public string IdPart => "Runner";
+        string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
-		public bool IsGuessable => false;
+        public bool IsGuessable => false;
 		public bool IsPowerCrew => true;
 		public Color RoleColor => Colors.Runner;
         public RoleBehaviour AppearAs => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<MayorRole>());

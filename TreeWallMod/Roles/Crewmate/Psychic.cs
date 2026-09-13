@@ -1,11 +1,8 @@
 ﻿using AmongUs.GameOptions;
-using TreeWallMod.Assets;
-using TreeWallMod.Events.Crewmate;
-using TreeWallMod.Modifiers.Crewmate;
-using TreeWallMod.Modules;
 using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,18 +13,23 @@ using TownOfUs.Modifiers.Crewmate;
 using TownOfUs.Modules.Wiki;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Crewmate;
+using TreeWallMod.Assets;
+using TreeWallMod.Events.Crewmate;
+using TreeWallMod.Modifiers.Crewmate;
+using TreeWallMod.Modules;
 using UnityEngine;
 
 namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class PsychicRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IDoomable
 	{
-		//public string LocaleKey => "Psychic";
-		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+        //public string LocaleKey => "Psychic";
+        //      public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
+        //      public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
+        //      public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
 
-		public string IdPart => "Psychic";
+        public string IdPart => "Psychic";
+        string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
         public bool IsPowerCrew => false;
 		public Color RoleColor => Colors.Psychic;

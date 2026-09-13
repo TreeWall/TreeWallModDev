@@ -56,13 +56,14 @@ namespace TreeWallMod.Roles.Neutral
 	public sealed class MarksmanRole(IntPtr cppPtr) : NeutralRole(cppPtr), ITownOfUsRole, IWikiDiscoverable, IDoomable, ICrewVariant
 	{
 		//public string LocaleKey => "Marksman";
-		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+		//      public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
+		//      public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
+		//      public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
 
 		public string IdPart => "Marksman";
+        string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
-		public RoleBehaviour CrewVariant => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<SeerRole>());
+        public RoleBehaviour CrewVariant => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<SeerRole>());
 		public Color RoleColor => Colors.Marksman;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Custom;
 		public RoleAlignment RoleAlignment => RoleAlignment.NeutralKilling;

@@ -18,9 +18,9 @@
 	<string name="DiedToMarksmanMisguess">Misguessed</string>
 	
     <!-- Runner - Crewmate Protective -->
-	<string name="TreeWallModRunner">Runner</string>
-	<string name="TreeWallModRunnerIntroBlurb">Run past the imposters!</string>
-	<string name="TreeWallModRunnerTabDescription">Avoid dying by just walking but beware of comms.\%nl\%Use \%b\%Caffeine\%/b\% to boost yourself.</string>
+	<string name="TreeWallMod.Role.Runner">Runner</string>
+	<string name="TreeWallMod.Role.Runner.IntroBlurb">Run past the imposters!</string>
+	<string name="TreeWallMod.Role.Runner.TabDescription">Avoid dying by just walking but beware of comms.[nl]Use [b]Caffeine[/b] to boost yourself.</string>
 	
     <!-- Runner Wiki -->
      
@@ -28,9 +28,9 @@
 
 
 	<!-- Psychic - Crewmate Killing -->
-	<string name="TreeWallModPsychic">Psychic</string>
-	<string name="TreeWallModPsychicIntroBlurb">Kill the Killers with your 6th sense.</string>
-	<string name="TreeWallModPsychicTabDescription">Kill players who have killed others in the past 15 secs. \%nl\%But don't accidentally kill your own teamates</string>
+	<string name="TreeWallMod.Role.Psychic">Psychic</string>
+	<string name="TreeWallMod.Role.Psychic.IntroBlurb">Kill the Killers with your 6th sense.</string>
+	<string name="TreeWallMod.Role.Psychic.TabDescription">Kill players who have killed others in the past 15 secs.[nl]But don't accidentally kill your own teamates</string>
 
 	<!-- Psychic Wiki -->
 
@@ -38,22 +38,22 @@
 
 
 	<!-- Syringe - Crewmate Power -->
-	<string name="TreeWallModSyringe">Syringe</string>
-	<string name="TreeWallModSyringeIntroBlurb">Cure the Imposters with your needle</string>
-	<string name="TreeWallModSyringeTabDescription">Inject someone, if they kill anyone, they get "cured"</string>
+	<string name="TreeWallMod.Role.Syringe">Syringe</string>
+	<string name="TreeWallMod.Role.Syringe.IntroBlurb">Cure the Imposters with your needle</string>
+	<string name="TreeWallMod.Role.Syringe.TabDescription">Inject someone, if they kill anyone, they get "cured"</string>
 
 	<!-- Syringe Wiki -->
-	<string name="TreeWallModSyringeWikiDescription">The Syringe is a Crewmate Power Role that can inject Evil Doers to "Cure" (i.e. kill) them when they kill someone. But Be careful to not accidentally inject Crew as they might Die or Become Traitors</string>
-	<string name="TreeWallModSyringeInject">Inject</string>
-	<string name="TreeWallModSyringeInjectWikiDescription">Inject a player. If they're a Evil Doer, kill them when the Evil Doer kills anyone. If they're Crew, either you die along with them, they become a Traitor, or nothing happens</string>
+	<string name="TreeWallMod.Role.Syringe.WikiDescription">The Syringe is a Crewmate Power Role that can inject Evil Doers to "Cure" (i.e. kill) them when they kill someone. But Be careful to not accidentally inject Crew as they might Die or Become Traitors</string>
+	<string name="TreeWallMod.Role.SyringeInject">Inject</string>
+	<string name="TreeWallMod.Role.SyringeInject.WikiDescription">Inject a player. If they're a Evil Doer, kill them when the Evil Doer kills anyone. If they're Crew, either you die along with them, they become a Traitor, or nothing happens</string>
 
 	<!-- Syringe Options -->
 
 
 	<!-- Marksman - Neutral Killing -->
-	<string name="TreeWallModMarksman">Marksman</string>
-	<string name="TreeWallModMarksmanIntroBlurb">Discover Player and gain new abilities.</string>
-	<string name="TreeWallModMarksmanTabDescription">Discover Players and guess them correctly during meetings to gain new abilities. \%nl\%Kill everyone to win!</string>
+	<string name="TreeWallMod.Role.Marksman">Marksman</string>
+	<string name="TreeWallMod.Role.Marksman.IntroBlurb">Discover Player and gain new abilities.</string>
+	<string name="TreeWallMod.Role.Marksman.TabDescription">Discover Players and guess them correctly during meetings to gain new abilities.[nl]Kill everyone to win!</string>
 
 	<!-- Marksman Wiki -->
 
