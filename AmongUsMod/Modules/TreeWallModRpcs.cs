@@ -5,6 +5,7 @@ using MiraAPI.Events.Vanilla.Gameplay;
 using MiraAPI.Hud;
 using MiraAPI.Modifiers;
 using MiraAPI.Networking;
+using MiraAPI.Translation;
 using MiraAPI.Utilities;
 using MiraAPI.Utilities.Assets;
 using Reactor.Networking.Attributes;
@@ -20,6 +21,7 @@ using TownOfUs.Events;
 using TownOfUs.Interfaces;
 using TownOfUs.Modifiers;
 using TownOfUs.Modules;
+using TownOfUs.Modules.Components;
 using TownOfUs.Networking;
 using TownOfUs.Roles;
 using TreeWallMod.Modifiers.Crewmate;
@@ -74,31 +76,6 @@ namespace TreeWallMod.Modules
 			pc.cosmetics.gameObject.SetActive(active);
 		}
 
-		[MethodRpc((uint)TreeWallModRpcsEnum.SurpassChecksDie)]
-		public static void RpcSurpassChecksDie(this PlayerControl player, PlayerControl killer, string? deathReason = null)
-		{
-			string cod = "Killer";
-			if (deathReason != null)
-			{
-				cod = deathReason;
-			}
-
-			if (!player.HasModifier<DeathHandlerModifier>())
-			{
-				DeathHandlerModifier.UpdateDeathHandlerImmediate(player, TouLocale.Get($"DiedTo{cod}"),
-				DeathEventHandlers.CurrentRound,
-				(!MeetingHud.Instance && !ExileController.Instance)
-					? DeathHandlerOverride.SetTrue
-					: DeathHandlerOverride.SetFalse,
-				TouLocale.GetParsed("DiedByStringBasic").Replace("<player>", killer.Data.PlayerName),
-				lockInfo: DeathHandlerOverride.SetTrue);
-			}
-
-			player.Die(DeathReason.Kill, false);
-			var @event = new AfterMurderEvent(killer, player, null);
-			MiraEventManager.InvokeEvent(@event);
-		}
-
 		[MethodRpc((uint)TreeWallModRpcsEnum.RemovePlayerSyringeInject)]
 		public static void RpcRemovePlayerSyringeInject(this PlayerControl injected, PlayerControl syringe)
 		{
@@ -125,30 +102,79 @@ namespace TreeWallMod.Modules
 		}
 
 		[MethodRpc((uint)TreeWallModRpcsEnum.MarksmanSuppressedComplete)]
-		public static void RpcMarksmanSuppressedComplete(this PlayerControl p, MarksmanSuppressedModifier marksmanSuppressedMod)
+		public static void RpcMarksmanSuppressedComplete(this PlayerControl target, MarksmanSuppressedModifier marksmanSuppressedMod)
 		{
-			//if (!p.TryGetModifier<MarksmanSuppressedModifier>(out var marksmanSuppressedMod))
+			//if (!target.TryGetModifier<MarksmanSuppressedModifier>(out var marksmanSuppressedMod))
 			//{
 			//	return;
 			//}
 
-			if (!marksmanSuppressedMod.murderResultFlags.HasFlag(MurderResultFlags.Succeeded))
+			var source = marksmanSuppressedMod.Killer;
+
+			var murderResultFlags2 = marksmanSuppressedMod.murderResultFlags | MurderResultFlags.DecisionByHost;
+
+			if (!murderResultFlags2.HasFlag(MurderResultFlags.Succeeded) ||
+				!murderResultFlags2.HasFlag(MurderResultFlags.DecisionByHost) ||
+				murderResultFlags2.HasFlag(MurderResultFlags.FailedError))
 			{
 				return;
 			}
 
-            DeathHandlerModifier.UpdateDeathHandlerImmediate(p, TouLocale.Get($"DiedToMarksman"),
-                DeathEventHandlers.CurrentRound,
-                (!MeetingHud.Instance && !ExileController.Instance)
-                    ? DeathHandlerOverride.SetTrue
-                    : DeathHandlerOverride.SetFalse,
-                TouLocale.GetParsed("DiedByStringBasic").Replace("<player>", marksmanSuppressedMod.Killer.Data.PlayerName),
-                lockInfo: DeathHandlerOverride.SetTrue);
+			//GameHistory.UpdatePlayerDeathData(target.PlayerId, MiraLocaleManager.Get($"DiedToMarksman"), 0,
+			//    HudManagerHelper.Instance.CurrentRound, (!MeetingHud.Instance && !ExileController.Instance)
+			//        ? DeathHandlerOverride.SetTrue
+			//        : DeathHandlerOverride.SetFalse,
+			//    MiraLocaleManager.Get("DiedByStringBasic").Replace("<player>", source.Data.PlayerName),
+			//    lockInfo: DeathHandlerOverride.SetTrue,
+			//    playerState: StoredPlayerState.Dead);
 
-            p.Die(DeathReason.Kill, true);
+			GameHistory.UpdatePlayerDeathData(target.PlayerId, MiraLocaleManager.Get($"DiedToMarksman"), 0,
+				HudManagerHelper.Instance.CurrentRound, DeathHandlerOverride.SetTrue,
+				MiraLocaleManager.Get("DiedByStringBasic").Replace("<player>", source.Data.PlayerName),
+				lockInfo: DeathHandlerOverride.SetTrue,
+				playerState: StoredPlayerState.Dead);
 
-            var afterMurderEvent = new AfterMurderEvent(marksmanSuppressedMod.Killer, p, null);
-            MiraEventManager.InvokeEvent(afterMurderEvent);			
+			DebugAnalytics.Instance.Analytics.Kill(target.Data, source.Data);
+			if (source.AmOwner)
+			{
+				DataManager.Player.Stats.IncrementStat(
+					GameManager.Instance.IsHideAndSeek()
+						? StatID.HideAndSeek_ImpostorKills
+						: StatID.ImpostorKills);
+			}
+
+			UnityTelemetry.Instance.WriteMurder();
+
+			if (target.AmOwner)
+			{
+				DataManager.Player.Stats.IncrementStat(StatID.TimesMurdered);
+				if (Minigame.Instance)
+				{
+					try
+					{
+						Minigame.Instance.Close();
+						Minigame.Instance.Close();
+					}
+					catch
+					{
+						// ignored
+					}
+				}
+
+                target.RpcSetScanner(false);
+            }
+
+            AchievementManager.Instance.OnMurder(
+				source.AmOwner,
+				target.AmOwner,
+				source.CurrentOutfitType == PlayerOutfitType.Shapeshifted,
+				source.shapeshiftTargetPlayerId,
+				target.PlayerId);
+
+            target.Die(DeathReason.Kill, true);
+
+			var afterMurderEvent = new AfterMurderEvent(source, target, null);
+			MiraEventManager.InvokeEvent(afterMurderEvent);			
 
 			// Dont FUCKING know why its like this
 			if (PlayerControl.LocalPlayer.IsHost())
@@ -158,13 +184,13 @@ namespace TreeWallMod.Modules
 			}
 			else
 			{
-                marksmanSuppressedMod.VoteArea.SetDead(false);
-            }
+				marksmanSuppressedMod.VoteArea.SetDead(false);
+			}
 
 			if (PlayerControl.LocalPlayer.IsHost())
-            {
-                p.RpcRemoveModifier<MarksmanSuppressedModifier>();
-            }
-        }
+			{
+				target.RpcRemoveModifier<MarksmanSuppressedModifier>();
+			}
+		}
 	}
 }

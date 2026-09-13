@@ -113,7 +113,7 @@ namespace TreeWallMod.Events.Neutral
 					continue;
 				}
 
-				plr.RpcMarksmanSuppressedComplete(marksmanSuppressedMod);
+                plr.RpcMarksmanSuppressedComplete(marksmanSuppressedMod);
 			}
 		}
     }

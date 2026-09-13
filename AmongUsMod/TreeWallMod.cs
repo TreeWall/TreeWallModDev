@@ -9,52 +9,40 @@ using MiraAPI.PluginLoading;
 using Reactor;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
+using Reactor.Utilities;
+using Rewired.Utils.Classes.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TreeWallMod.Modules.Localization;
 using TreeWallMod.Options;
 using UnityEngine;
 
 namespace TreeWallMod
 {
-	[BepInAutoPlugin("com.treewall.TreeWallMod", "TreeWallMod")]
+	[BepInAutoPlugin("com.treewall.mod", "TreeWallMod")]
 	[BepInProcess("Among Us.exe")]
 	[BepInDependency(ReactorPlugin.Id)]
 	[BepInDependency(MiraApiPlugin.Id)]
-	[ReactorModFlags(ModFlags.RequireOnAllClients)]
+    [BepInDependency("auavengers.tou.mira", BepInDependency.DependencyFlags.SoftDependency)]
+    [ReactorModFlags(ModFlags.RequireOnAllClients)]
 	public partial class TreeWallModPlugin : BasePlugin, IMiraPlugin
 	{
-		public Harmony Harmony { get; } = new(Id);
-
-		public string OptionsTitleText => "Among Us Mod :D";
+        public string OptionsTitleText => "TreeWall Mod";
         public static bool IsDevBuild => true;
 
+        public Harmony Harmony { get; } = new(Id);
         public ConfigFile GetConfigFile() => Config;
 
 		public override void Load()
 		{
-            IL2CPPChainloader.Instance.Finished += Modules.ExtensionLocale.SearchInternalLocale;
-
             Harmony.PatchAll();
 
-			Message("TreeWallMod Loaded!");
-
-			var assembly = Assembly.GetExecutingAssembly();
-			string[] resourceNames = assembly.GetManifestResourceNames();
-
-            Message("--- LISTING ALL EMBEDDED RESOURCES ---");
-			foreach (string name in resourceNames)
-			{
-				Message($"Found resource: {name}");
-			}
-			Message("-------------------------------------");
-
-			Message("--- BUNDLE RESOURCES ---");
-            foreach(var name in TreeWallMod.Assets.Assets.Bundle.GetAllAssetNames())
-				Message("Bundle asset: " + name);
+            TreeWallLocale.Register();
+            ReactorCredits.Register("TreeWall Mod", Version, IsDevBuild, ReactorCredits.AlwaysShow);
 
             Patches.ChangeSoundPatch.RegisterSwap("impostor_kill", () =>
             {

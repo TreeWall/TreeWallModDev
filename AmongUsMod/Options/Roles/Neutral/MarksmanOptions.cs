@@ -69,9 +69,6 @@ namespace TreeWallMod.Options.Roles.Neutral
         [ModdedNumberOption("Smokebomb Radius", 0.25f, 5f, 0.25f, MiraNumberSuffixes.Multiplier)]
         public float SmokebombRadius { get; set; } = 1f;
 
-        //public ModdedEnumOption CanVent { get; set; } = new("Swooper Can Vent", (int)SwooperVent.Visible, typeof(SwooperVent),
-        //    ["Never", "While Visible", "Always"]);
-
         [ModdedNumberOption("Warp mark cooldown", 5f, 60f, 2.5f, MiraNumberSuffixes.Seconds)]
 		public float WarpMarkCd { get; set; } = 25f;
 

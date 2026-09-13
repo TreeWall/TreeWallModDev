@@ -3,6 +3,7 @@ using Il2CppInterop.Runtime.Attributes;
 using MiraAPI.Modifiers;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +24,15 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class SyringeRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IDoomable, ILoyalCrewmate
 	{
-		public string LocaleKey => "Syringe";
-		public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+		//public string LocaleKey => "Syringe";
+		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
+		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
+		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
 
-		public bool IsPowerCrew => false;
-		public Color RoleColor => TreeWallMod.Colors.Syringe;
+		public string IdPart => "Syringe";
+
+        public bool IsPowerCrew => false;
+		public Color RoleColor => Colors.Syringe;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Crewmate;
 		public RoleAlignment RoleAlignment => RoleAlignment.CrewmatePower;
 		public DoomableType DoomHintType => DoomableType.Fearmonger;
@@ -42,7 +45,7 @@ namespace TreeWallMod.Roles.Crewmate
 		public string GetAdvancedDescription()
 		{
 			return
-				TouLocale.GetParsed($"TreeWallMod{LocaleKey}WikiDescription") +
+                MiraLocaleManager.Get($"TreeWallMod{IdPart}WikiDescription") +
 				MiscUtils.AppendOptionsText(GetType());
 		}
 
@@ -53,8 +56,8 @@ namespace TreeWallMod.Roles.Crewmate
 			{
 				return new List<CustomButtonWikiDescription>
 				{
-					new(TouLocale.GetParsed($"TreeWallMod{LocaleKey}Inject", "Inject"),
-						TouLocale.GetParsed($"TreeWallMod{LocaleKey}InjectWikiDescription"),
+					new(MiraLocaleManager.Get($"TreeWallMod{IdPart}Inject", "Inject"),
+                        MiraLocaleManager.Get($"TreeWallMod{IdPart}InjectWikiDescription"),
 						CrewAssets.SyringeInjectSprite),
 				};
 			}

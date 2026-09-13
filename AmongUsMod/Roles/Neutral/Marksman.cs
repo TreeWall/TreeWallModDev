@@ -7,6 +7,7 @@ using MiraAPI.Modifiers;
 using MiraAPI.Networking;
 using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
+using MiraAPI.Translation;
 using MiraAPI.Utilities;
 using MiraAPI.Utilities.Assets;
 using Reactor.Networking.Attributes;
@@ -54,13 +55,15 @@ namespace TreeWallMod.Roles.Neutral
 {
 	public sealed class MarksmanRole(IntPtr cppPtr) : NeutralRole(cppPtr), ITownOfUsRole, IWikiDiscoverable, IDoomable, ICrewVariant
 	{
-		public string LocaleKey => "Marksman";
-		public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+		//public string LocaleKey => "Marksman";
+		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
+		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
+		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
 
-		public RoleBehaviour CrewVariant => throw new NotImplementedException();
-		public Color RoleColor => TreeWallMod.Colors.Marksman;
+		public string IdPart => "Marksman";
+
+		public RoleBehaviour CrewVariant => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<SeerRole>());
+		public Color RoleColor => Colors.Marksman;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Custom;
 		public RoleAlignment RoleAlignment => RoleAlignment.NeutralKilling;
 		public DoomableType DoomHintType => DoomableType.Insight;
@@ -77,14 +80,14 @@ namespace TreeWallMod.Roles.Neutral
 
 		public override void SpawnTaskHeader(PlayerControl playerControl)
 		{
-			if (!playerControl.AmOwner)
-			{
-				return;
-			}
-			ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
-			orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{TouLocale.GetParsed("NeutralKillingTaskHeader")}</color>";
-			orCreateTask.name = "NeutralRoleText";
-		}
+            if (!playerControl.AmOwner)
+            {
+                return;
+            }
+            ImportantTextTask orCreateTask = PlayerTask.GetOrCreateTask<ImportantTextTask>(playerControl, 0);
+            orCreateTask.Text = $"{TownOfUsColors.Neutral.ToTextColor()}{MiraLocaleManager.Get("NeutralKillingTaskHeader")}</color>";
+            orCreateTask.name = "NeutralRoleText";
+        }
 
 		public readonly List<MarksmanAbility> LockedAbilities   = Enum.GetValues<MarksmanAbility>().ToList();
 		public readonly List<MarksmanAbility> UnlockedAbilities = new();
@@ -108,7 +111,12 @@ namespace TreeWallMod.Roles.Neutral
 					null!,
 					IsExempt);
 
-				AddAbility(Player, MarksmanAbility.SharpenedBlade);
+                if (!LegacyAssets.IsLegacy)
+                {
+                    HudManager.Instance.ImpostorVentButton.buttonLabelText.SetOutlineColor(Colors.Marksman);
+                }
+
+                AddAbility(Player, MarksmanAbility.SharpenedBlade);
 				AddAbility(Player, MarksmanAbility.SmokeBomb);
 				AddAbility(Player, MarksmanAbility.Warp);
 				AddAbility(Player, MarksmanAbility.Vanish);
@@ -127,11 +135,6 @@ namespace TreeWallMod.Roles.Neutral
 			{
 				meetingMenu?.Dispose();
 				meetingMenu = null!;
-			}
-
-			if (!Player.HasModifier<BasicGhostModifier>())
-			{
-				Player.AddModifier<BasicGhostModifier>();
 			}
 		}
 
@@ -365,10 +368,10 @@ namespace TreeWallMod.Roles.Neutral
 					hintType = doomableRole.DoomHintType;
 				}
 
-				var fallback = TouLocale.GetParsed("TouRoleDoomsayerRoleHintDefault");
-				var hint = TouLocale.GetParsed($"TouRoleDoomsayerRoleHint{hintType}");
+                var fallback = MiraLocaleManager.Get("TownOfUsMira.Role.DoomsayerRoleHintDefault");
+                var hint = MiraLocaleManager.Get($"TownOfUsMira.Role.DoomsayerRoleHint{hintType}");
 
-				if (hint.Contains("STRMISS"))
+                if (hint.Contains("STRMISS"))
 				{
 					reportBuilder.AppendLine(TownOfUsPlugin.Culture,
 						$"{fallback.Replace("<player>", target.name)}\n");
@@ -520,7 +523,7 @@ namespace TreeWallMod.Roles.Neutral
                         (IncorrectGuesses - (opts.MisguessAvailable ? 1 : 0) > 0))
 					{
                         var notifDeath1 = Helpers.CreateAndShowNotification(
-							"That was an incorrect Guess my boi NOW DIE",
+							"That was an incorrect Guess NOW DIE",
 							Color.red, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
                         notifDeath1.AdjustNotification();
@@ -533,7 +536,7 @@ namespace TreeWallMod.Roles.Neutral
 					}
 
                     var notif2 = Helpers.CreateAndShowNotification(
-                        "That was an incorrect Guess my boi",
+                        $"That was an incorrect Guess, Incorrect Guesses Left: {(opts.MisguessAvailable ? 1 : 0) - IncorrectGuesses}",
                         Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
 
                     notif2.AdjustNotification();

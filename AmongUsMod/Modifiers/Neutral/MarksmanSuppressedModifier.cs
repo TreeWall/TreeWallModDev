@@ -63,6 +63,7 @@ namespace TreeWallMod.Modifiers.Neutral
 
             var beforeMurderEvent = new BeforeMurderEvent(Killer, Player, MeetingCheck.ForMeeting);
             MiraEventManager.InvokeEvent(beforeMurderEvent);
+
             if (!MeetingHud.Instance && !ExileController.Instance)
             {
                 beforeMurderEvent.Cancel();

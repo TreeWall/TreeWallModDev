@@ -35,14 +35,16 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class RunnerRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IUnguessable, IDoomable
     {
-		public string LocaleKey => "Runner";
-		public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+		//public string LocaleKey => "Runner";
+		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
+		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
+		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+
+		public string IdPart => "Runner";
 
 		public bool IsGuessable => false;
 		public bool IsPowerCrew => true;
-		public Color RoleColor => TreeWallMod.Colors.Runner;
+		public Color RoleColor => Colors.Runner;
         public RoleBehaviour AppearAs => RoleManager.Instance.GetRole((RoleTypes)RoleId.Get<MayorRole>());
 		public RoleAlignment RoleAlignment => RoleAlignment.CrewmateProtective;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Crewmate;

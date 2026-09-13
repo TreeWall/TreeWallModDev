@@ -22,13 +22,15 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class PsychicRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IDoomable
 	{
-		public string LocaleKey => "Psychic";
-		public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
-		public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
-		public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
+		//public string LocaleKey => "Psychic";
+		//public string RoleName => TouLocale.Get($"TreeWallMod{LocaleKey}");
+		//public string RoleDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb");
+		//public string RoleLongDescription => TouLocale.GetParsed($"TreeWallMod{LocaleKey}TabDescription");
 
-		public bool IsPowerCrew => false;
-		public Color RoleColor => TreeWallMod.Colors.Psychic;
+		public string IdPart => "Psychic";
+
+        public bool IsPowerCrew => false;
+		public Color RoleColor => Colors.Psychic;
 		public ModdedRoleTeams Team => ModdedRoleTeams.Crewmate;
 		public RoleAlignment RoleAlignment => RoleAlignment.CrewmateKilling;
 		public DoomableType DoomHintType => DoomableType.Relentless;

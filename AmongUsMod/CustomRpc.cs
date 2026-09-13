@@ -10,7 +10,6 @@ namespace TreeWallMod
 	{
 		ChangeAnimation,
 		CosmeticControl,
-		SurpassChecksDie,
 
         AddPlayerSyringeInject,
         RemovePlayerSyringeInject,

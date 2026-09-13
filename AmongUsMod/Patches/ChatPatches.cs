@@ -2,6 +2,7 @@
 using MiraAPI.GameOptions;
 using MiraAPI.Modifiers;
 using MiraAPI.Roles;
+using MiraAPI.Translation;
 using MiraAPI.Utilities;
 using Reactor.Networking.Attributes;
 using Reactor.Utilities.Extensions;
@@ -37,7 +38,7 @@ namespace TreeWallMod.Patches
             var text = __instance.freeChatField.Text.ToLower(TownOfUsPlugin.Culture);
             var textRegular = __instance.freeChatField.Text.WithoutRichText();
 
-            var systemName = $"<color=#8BFDFD>{TouLocale.GetParsed("SystemChatTitle")}</color>";
+            var systemName = $"<color=#8BFDFD>{MiraLocaleManager.Get("SystemChatTitle")}</color>";
 
             if (textRegular.StartsWith("/modifier ", StringComparison.OrdinalIgnoreCase))
             {
