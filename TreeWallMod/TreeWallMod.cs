@@ -6,6 +6,7 @@ using HarmonyLib;
 using MiraAPI;
 using MiraAPI.GameOptions;
 using MiraAPI.PluginLoading;
+using MiraAPI.Translation;
 using Reactor;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
@@ -41,8 +42,8 @@ namespace TreeWallMod
 		{
             Harmony.PatchAll();
 
-            TreeWallLocale.Register();
-            ReactorCredits.Register("TreeWall Mod", Version, IsDevBuild, ReactorCredits.AlwaysShow);
+            MiraLocaleManager.Register(Id);
+            ReactorCredits.Register<TreeWallModPlugin>(ReactorCredits.AlwaysShow);
 
             Patches.ChangeSoundPatch.RegisterSwap("impostor_kill", () =>
             {

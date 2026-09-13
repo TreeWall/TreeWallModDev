@@ -3,5 +3,5 @@
     <File Path="AmongUs.props" />
     <File Path="nuget.config" />
   </Folder>
-  <Project Path="AmongUsMod/TreeWallMod.csproj" />
+  <Project Path="TreeWallMod/TreeWallMod.csproj" />
 </Solution>
