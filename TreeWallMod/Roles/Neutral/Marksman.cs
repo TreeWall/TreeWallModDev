@@ -601,7 +601,7 @@ namespace TreeWallMod.Roles.Neutral
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Sharpened Blade was Unlocked! Your Kill Cd has been decreased by {opts.SharpenedBladeKillCdReduction} seconds.",
-						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+						Color.white, new Vector3(0f, 1f, -20f), spr: NeutAssets.MarksmanSharpenedBlade.LoadAsset());
 
 					notif1.AdjustNotification();
 
@@ -612,7 +612,7 @@ namespace TreeWallMod.Roles.Neutral
                 {
                     var notif1 = Helpers.CreateAndShowNotification(
                         $"Smokebomb was Unlocked! You can now blind players in a set radius, this is not like grenadier, this has smoke",
-                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+                        Color.white, new Vector3(0f, 1f, -20f), spr: NeutAssets.MarksmanSmokeBomb.LoadAsset());
 
                     notif1.AdjustNotification();
 
@@ -623,7 +623,7 @@ namespace TreeWallMod.Roles.Neutral
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Warp was Unlocked! You can now mark a player to Warp to them",
-						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+						Color.white, new Vector3(0f, 1f, -20f), spr: NeutAssets.MarksmanWarp.LoadAsset());
 
 					notif1.AdjustNotification();
 
@@ -634,7 +634,7 @@ namespace TreeWallMod.Roles.Neutral
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Vanish was Unlocked! You can now turn yourself mostly invisble",
-						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+						Color.white, new Vector3(0f, 1f, -20f), spr: TouImpAssets.SwoopSprite.LoadAsset());
 
 					notif1.AdjustNotification();
 
@@ -645,7 +645,7 @@ namespace TreeWallMod.Roles.Neutral
                 {
                     var notif1 = Helpers.CreateAndShowNotification(
                         $"Dismantle was Unlocked! You can now make a Player unable to move, use abilities or SEE :D, but you only have 1 use!",
-                        Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+                        Color.white, new Vector3(0f, 1f, -20f), spr: NeutAssets.MarksmanDismantle.LoadAsset());
 
                     notif1.AdjustNotification();
 
@@ -656,7 +656,7 @@ namespace TreeWallMod.Roles.Neutral
 				{
 					var notif1 = Helpers.CreateAndShowNotification(
 						$"Supressor was Unlocked! You can now guess people without anyone else knowing.",
-						Color.white, new Vector3(0f, 1f, -20f), spr: RoleIcons.Marksman.LoadAsset());
+						Color.white, new Vector3(0f, 1f, -20f), spr: NeutAssets.MarksmanSuppressed.LoadAsset());
 
 					notif1.AdjustNotification();
 

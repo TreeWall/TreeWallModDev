@@ -8,6 +8,7 @@ using TownOfUs;
 using TownOfUs.Buttons;
 using TownOfUs.Modifiers.Impostor;
 using TownOfUs.Options.Roles.Impostor;
+using TreeWallMod.Assets;
 using TreeWallMod.Modifiers.Neutral;
 using TreeWallMod.Options.Roles.Neutral;
 using TreeWallMod.Roles.Neutral;
@@ -23,7 +24,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
         public override float EffectDuration => OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombDuration;
         public override int MaxUses => (int)OptionGroupSingleton<MarksmanOptions>.Instance.SmokebombUses;
         public override ButtonLocation Location => ButtonLocation.BottomLeft;
-        public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
+        public override LoadableAsset<Sprite> Sprite => NeutAssets.MarksmanSmokeBomb;
         public override bool ShouldPauseInVent => true;
         public override bool ZeroIsInfinite { get; set; } = true;
 

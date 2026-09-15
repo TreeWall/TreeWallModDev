@@ -18,6 +18,6 @@
 	<Import Project="../AmongUs.props" />
 
 	<Target Name="CopyDLLToPlugins" AfterTargets="Build">
-		<Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="C:\Users\amitk\Desktop\Modding among us\BepInEx\plugins" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="false" />
+		<Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="C:\Users\Dk\Desktop\Modding among us\BepInEx\plugins" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="false" />
 	</Target>
 </Project>

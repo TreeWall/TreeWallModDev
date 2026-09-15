@@ -12,6 +12,7 @@ using TownOfUs;
 using TownOfUs.Buttons;
 using TownOfUs.Modifiers.Neutral;
 using TownOfUs.Roles.Neutral;
+using TreeWallMod.Assets;
 using TreeWallMod.Modifiers.Neutral;
 using TreeWallMod.Options.Roles.Neutral;
 using TreeWallMod.Roles.Neutral;
@@ -27,7 +28,7 @@ namespace TreeWallMod.Buttons.Neutral.Marksman
         public override float EffectDuration => OptionGroupSingleton<MarksmanOptions>.Instance.DismantleDelay;
 		public override int MaxUses => 1;
 		public override ButtonLocation Location => ButtonLocation.BottomLeft;
-		public override LoadableAsset<Sprite> Sprite => Assets.RoleIcons.Marksman;
+		public override LoadableAsset<Sprite> Sprite => NeutAssets.MarksmanDismantle;
 		public override bool ShouldPauseInVent => false;
 		public override bool UsableFirstRound => false;
 
