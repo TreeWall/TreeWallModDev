@@ -11,6 +11,8 @@ namespace TreeWallMod
 		ChangeAnimation,
 		CosmeticControl,
 
+		RunnerUpdateMoving,
+		SetRunnerSpeed,
         AddPlayerSyringeInject,
         RemovePlayerSyringeInject,
         MarksmanSuppressedComplete,

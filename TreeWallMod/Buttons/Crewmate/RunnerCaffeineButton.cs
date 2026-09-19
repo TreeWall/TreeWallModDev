@@ -26,47 +26,42 @@ namespace TreeWallMod.Buttons.Crewmate
 	{
 		public override string Name => "Caffeine";
 		public override BaseKeybind Keybind => Keybinds.PrimaryAction;
-		public override Color TextOutlineColor => TreeWallMod.Colors.Runner;
+		public override Color TextOutlineColor => Colors.Runner;
 		public override float Cooldown => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineCooldown;
-		public override float EffectDuration => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineDuration;
+		public override float EffectDuration => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineDuration.Value;
+        public override int MaxUses => (int)OptionGroupSingleton<RunnerOptions>.Instance.CaffeineUses;
 		public override LoadableAsset<Sprite> Sprite => CrewAssets.RunnerCaffeineSprite;
+		public override bool ZeroIsInfinite { get; set; } = true;
 
-		private static PlayerControl targetPlayer => PlayerControl.LocalPlayer;
-		
 		protected override void OnClick()
 		{
-			if (!targetPlayer.TryGetModifier<RunnerSpeedModifier>(out var runner))
-			{
-				Logger<TreeWallModPlugin>.Instance.LogError("Does not have Runner Modifier! Something went wrong!");
-				return;
-			}
+			var runner = PlayerControl.LocalPlayer.GetRole<RunnerRole>()!;
 
-            runner.active = true;
+			float speed = 0;
 
             if (OptionGroupSingleton<RunnerOptions>.Instance.CaffeineStack && 
-				runner.speedMultiplier + OptionGroupSingleton<RunnerOptions>.Instance.SpeedMultiplier > OptionGroupSingleton<RunnerOptions>.Instance.SpeedLimit.Value && 
+				runner.SpeedMultiplier + OptionGroupSingleton<RunnerOptions>.Instance.SpeedMultiplier - 1 > OptionGroupSingleton<RunnerOptions>.Instance.SpeedLimit.Value && 
 				OptionGroupSingleton<RunnerOptions>.Instance.SpeedLimit.Value != 0)
 			{
-				return;
+				speed = runner.SpeedMultiplier;
 			}
+			else
+			{
+				speed = (runner.SpeedMultiplier == 1 ? 0 : runner.SpeedMultiplier) + OptionGroupSingleton<RunnerOptions>.Instance.SpeedMultiplier;
+            }
 
-            Message($"Start {targetPlayer.MyPhysics.Speed} Internal: {runner.speedMultiplier} Limit: {OptionGroupSingleton<RunnerOptions>.Instance.SpeedLimit.Value}");
+			RunnerRole.RpcSetRunnerSpeed(runner.Player, speed, true);
 
-			runner.speedMultiplier += OptionGroupSingleton<RunnerOptions>.Instance.SpeedMultiplier; 
+			Message($"Current Multiplier: {runner.SpeedMultiplier}, Active: {runner.SpeedActive}");
         }
-
 
         public override void OnEffectEnd()
 		{
-			if (targetPlayer.TryGetModifier<RunnerSpeedModifier>(out var runner))
-			{
-                runner.active = false;
-                if (!OptionGroupSingleton<RunnerOptions>.Instance.CaffeineStack) runner.speedMultiplier = 1.0f;
-            }
+            var runner = PlayerControl.LocalPlayer.GetRole<RunnerRole>()!;
 
-            float re = 0;
-            if (targetPlayer.TryGetModifier<RunnerSpeedModifier>(out var e)) re = e.speedMultiplier;
-            Message($"End {targetPlayer.MyPhysics.Speed} Internal: {re}");
+			float speed = OptionGroupSingleton<RunnerOptions>.Instance.CaffeineStack ? runner.SpeedMultiplier : 1f;
+
+			RunnerRole.RpcSetRunnerSpeed(runner.Player, speed, false);
         }
 
 	}

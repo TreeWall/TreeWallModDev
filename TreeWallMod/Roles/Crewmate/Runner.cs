@@ -10,6 +10,7 @@ using MiraAPI.Roles;
 using MiraAPI.Translation;
 using MiraAPI.Utilities;
 using Mono.Cecil;
+using Reactor.Networking.Attributes;
 using Reactor.Utilities;
 using System;
 using System.Collections;
@@ -36,11 +37,6 @@ namespace TreeWallMod.Roles.Crewmate
 {
 	public sealed class RunnerRole(IntPtr cppPtr) : CrewmateRole(cppPtr), ITouCrewRole, IWikiDiscoverable, IUnguessable, IDoomable
     {
-        //public string LocaleKey => "Runner";
-        //public string RoleName => MiraLocaleManager.Get($"TreeWallMod{LocaleKey}");
-        //public string RoleDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}IntroBlurb", [], string.Empty);
-        //public string RoleLongDescription => MiraLocaleManager.GetParsed($"TreeWallMod{LocaleKey}TabDescription", [], string.Empty);
-
         public string IdPart => "Runner";
         string ICustomRole.IdPrefix => "TreeWallMod.Role";
 
@@ -52,43 +48,100 @@ namespace TreeWallMod.Roles.Crewmate
 		public ModdedRoleTeams Team => ModdedRoleTeams.Crewmate;
 		public DoomableType DoomHintType => DoomableType.Trickster;
 
+		public float SpeedMultiplier { get; set; } = 1f;
+		public bool SpeedActive { get; set; } = false;
+
+		const float RPC_TIME_PERIOD = 1f;
+		const float RPC_MIN_DELAY = 0.25f;
+		float elapsed = 0f;
+		bool moving = true;
+		bool? prevMoving = null;
+		int order = 0;
+
+		public List<RunnerMoveData> RunnerMoves { get; set; } = new();
+
 		public CustomRoleConfiguration Configuration => new(this)
 		{
 			Icon = RoleIcons.Runner
 		};
 
-
-		public override void Initialize(PlayerControl player)
+		public void FixedUpdate()
 		{
-			RoleBehaviourStubs.Initialize(this, player);
+			if (Player == null || !Player.AmOwner)
+			{
+				return;
+			}
 
-            if (player.AmOwner)
-            {
-                if (player.HasModifier<RunnerSpeedModifier>()) player.RpcRemoveModifier<RunnerSpeedModifier>();
-                player.RpcAddModifier<RunnerSpeedModifier>();
-            }
-        }
+			// send moving to be false even if the player stops moving just for a frame in a 1 sec period
+			if (Player.MyPhysics.Velocity.sqrMagnitude == 0)
+			{
+				moving = false;
+			}
 
-		public override void Deinitialize(PlayerControl targetPlayer)
-		{
-			RoleBehaviourStubs.Deinitialize(this, targetPlayer);
+			elapsed += Time.deltaTime;
+			
+			if ((moving == false && elapsed >= RPC_MIN_DELAY) || elapsed >= RPC_TIME_PERIOD)
+			{
+				// reset timer
+				elapsed = 0f;
 
-			Clear();
+				// check if the state of player movement has changed, and if so send a new packet stating so
+				if (prevMoving == null || prevMoving != moving)
+				{
+					RpcUpdateRunnerMoving(Player, moving, order);
+					prevMoving = moving;
+					order++;
+				}
+
+				moving = true;
+			}
 		}
 
-        public override void OnDeath(DeathReason reason)
+        public override void OnMeetingStart()
         {
-            RoleBehaviourStubs.OnDeath(this, reason);
-
-            Clear();
+			SpeedMultiplier = 1f;
+			SpeedActive = false;
         }
 
-        public void Clear()
-        {
-            if (Player.AmOwner && Player != null)
-            {
-                if (Player.HasModifier<RunnerSpeedModifier>()) Player.RpcRemoveModifier<RunnerSpeedModifier>();
-            }
+		[MethodRpc((uint)TreeWallModRpcsEnum.SetRunnerSpeed)]
+		public static void RpcSetRunnerSpeed(PlayerControl runner, float multiplier, bool active)
+		{
+			var runnerRole = runner.GetRole<RunnerRole>();
+
+			if (runnerRole == null)
+			{
+				return;
+			}
+
+			runnerRole.SpeedMultiplier = multiplier;
+			runnerRole.SpeedActive = active;
         }
+
+		[MethodRpc((uint)TreeWallModRpcsEnum.RunnerUpdateMoving)]
+		public static void RpcUpdateRunnerMoving(PlayerControl player, bool moving, int order)
+		{
+			var runner = player.GetRole<RunnerRole>();
+			
+			if (runner == null)
+			{
+				return;
+			}
+
+			runner.RunnerMoves.Add(new RunnerMoveData(player.PlayerId, moving, order));
+
+			if (runner.RunnerMoves.Count > 5)
+			{
+				runner.RunnerMoves.RemoveAll(x => x.Order <= order-5);
+			}
+
+			//Message($"Runner Info Updated - player: {player.name} moving: {moving} Order: {order} RunnerMoves Count: {runner.RunnerMoves.Count}");
+		}
+    }
+
+	public readonly struct RunnerMoveData(byte playerId, bool moving, int order)
+	{
+		public byte PlayerId { get; } = playerId;
+        public bool Moving { get; } = moving;
+        public int Order { get; } = order;
     }
 }
