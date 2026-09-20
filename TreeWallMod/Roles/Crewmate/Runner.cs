@@ -1,35 +1,11 @@
 using AmongUs.GameOptions;
-using Il2CppInterop.Runtime.Attributes;
-using InnerNet;
-using MiraAPI.GameOptions;
-using MiraAPI.Hud;
-using MiraAPI.LocalSettings;
-using MiraAPI.Modifiers;
-using MiraAPI.Patches.Stubs;
 using MiraAPI.Roles;
-using MiraAPI.Translation;
-using MiraAPI.Utilities;
-using Mono.Cecil;
 using Reactor.Networking.Attributes;
-using Reactor.Utilities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TownOfUs;
-using TownOfUs.Assets;
-using TownOfUs.Extensions;
-using TownOfUs.Modules.Localization;
-using TownOfUs.Modules.Wiki;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Crewmate;
-using TownOfUs.Roles.Neutral;
-using TownOfUs.Utilities;
 using TreeWallMod.Assets;
-using TreeWallMod.Buttons.Crewmate;
-using TreeWallMod.Modifiers.Crewmate;
-using TreeWallMod.Modules;
-using TreeWallMod.Options.Roles.Crewmate;
 using UnityEngine;
 
 
@@ -65,7 +41,7 @@ namespace TreeWallMod.Roles.Crewmate
 			Icon = RoleIcons.Runner
 		};
 
-		public void FixedUpdate()
+        public void FixedUpdate()
 		{
 			if (Player == null || !Player.AmOwner)
 			{

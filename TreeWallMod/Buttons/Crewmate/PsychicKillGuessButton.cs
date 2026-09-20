@@ -28,12 +28,12 @@ namespace TreeWallMod.Buttons.Crewmate
 	{
 		public override string Name => "Guess Killer";
 		public override Color TextOutlineColor => new Color32(165, 231, 89, 255);
-		public override float Cooldown => OptionGroupSingleton<PsychicOptions>.Instance.PsychicGuessCd;
-		public override float InitialCooldown => OptionGroupSingleton<PsychicOptions>.Instance.PsychicGuessCd;
-		public override ButtonLocation Location => ButtonLocation.BottomLeft;
+		public override float Cooldown => Math.Clamp(OptionGroupSingleton<PsychicOptions>.Instance.PsychicGuessCd + MapCooldown, 5f, 120f);
+        public override ButtonLocation Location => ButtonLocation.BottomLeft;
 		public override LoadableAsset<Sprite> Sprite => Assets.CrewAssets.PsychicKillGuessSprite;
+        public bool CanStillUse = true;
 
-		public override bool UsableInDeath => false;
+        public override bool UsableInDeath => false;
 		public override float EffectDuration => 3.0f;
 
 		private PlayerControl? Victim;
@@ -96,27 +96,29 @@ namespace TreeWallMod.Buttons.Crewmate
 				return;
 			}
 
-			var targetPlayer = PlayerControl.LocalPlayer;
-			if (targetPlayer.TryGetModifier<PsychicStorageModifier>(out var psychic) && psychic.HasKiller(Victim))
+			var player = PlayerControl.LocalPlayer;
+			var psychic = player.GetRole<PsychicRole>()!;
+
+			if (psychic.HasKiller(Victim.PlayerId))
 			{
 				try
 				{
-					targetPlayer.RpcSpecialMurder(Victim, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: true, playKillSound: false, causeOfDeath: "PsychicGuess");
+                    player.RpcSpecialMurder(Victim, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: true, playKillSound: false, causeOfDeath: "PsychicGuess");
 				}
 				catch
 				{
-					targetPlayer.RpcSpecialMurder(Victim, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: false, playKillSound: false, causeOfDeath: "PsychicGuess");
+                    player.RpcSpecialMurder(Victim, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: false, playKillSound: false, causeOfDeath: "PsychicGuess");
 				}
 			}
 			else if (OptionGroupSingleton<PsychicOptions>.Instance.WrongGuessToggle)
 			{
 				try
 				{
-					targetPlayer.RpcSpecialMurder(targetPlayer, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: true, playKillSound: false, causeOfDeath: "PsychicMisguess");
+                    player.RpcSpecialMurder(player, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: true, playKillSound: false, causeOfDeath: "PsychicMisguess");
 				}
 				catch
 				{
-					targetPlayer.RpcSpecialMurder(targetPlayer, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: false, playKillSound: false, causeOfDeath: "PsychicMisguess");
+                    player.RpcSpecialMurder(player, MeetingCheck.OutsideMeeting, true, teleportMurderer: false, showKillAnim: false, playKillSound: false, causeOfDeath: "PsychicMisguess");
 				}
 			}
 		}

@@ -1,24 +1,15 @@
+using MiraAPI.GameOptions;
+using MiraAPI.Utilities.Assets;
+using TownOfUs.Buttons;
+using TownOfUs.Modifiers;
+using TownOfUs.Options.Roles.Crewmate;
+using TownOfUs.Roles.Crewmate;
+using UnityEngine;
 using TreeWallMod.Assets;
 using TreeWallMod.Modifiers.Crewmate;
 using TreeWallMod.Options.Roles.Crewmate;
 using TreeWallMod.Roles.Crewmate;
-using MiraAPI.GameOptions;
-using MiraAPI.Hud;
-using MiraAPI.Keybinds;
-using MiraAPI.Modifiers;
-using MiraAPI.Networking;
-using MiraAPI.Utilities;
-using MiraAPI.Utilities.Assets;
-using Reactor.Networking;
-using Reactor.Utilities;
-using System.Collections.Generic;
-using System.Linq;
-using TownOfUs.Assets;
-using TownOfUs.Buttons;
-using TownOfUs.Options.Modifiers.Alliance;
-using TownOfUs.Utilities;
-using UnityEngine;
-using UnityEngine.ProBuilder;
+using System;
 
 namespace TreeWallMod.Buttons.Crewmate
 {
@@ -27,13 +18,14 @@ namespace TreeWallMod.Buttons.Crewmate
 		public override string Name => "Caffeine";
 		public override BaseKeybind Keybind => Keybinds.PrimaryAction;
 		public override Color TextOutlineColor => Colors.Runner;
-		public override float Cooldown => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineCooldown;
-		public override float EffectDuration => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineDuration.Value;
+        public override float Cooldown => Math.Clamp(OptionGroupSingleton<RunnerOptions>.Instance.CaffeineCooldown + MapCooldown, 5f, 120f);
+        public override float EffectDuration => OptionGroupSingleton<RunnerOptions>.Instance.CaffeineDuration.Value;
         public override int MaxUses => (int)OptionGroupSingleton<RunnerOptions>.Instance.CaffeineUses;
 		public override LoadableAsset<Sprite> Sprite => CrewAssets.RunnerCaffeineSprite;
 		public override bool ZeroIsInfinite { get; set; } = true;
+        public bool CanStillUse = true;
 
-		protected override void OnClick()
+        protected override void OnClick()
 		{
 			var runner = PlayerControl.LocalPlayer.GetRole<RunnerRole>()!;
 

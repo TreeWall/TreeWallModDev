@@ -1,14 +1,16 @@
 All the roles I wanted to implement for v1 have been implemented, I just need to polish them to actually release them for v1
 
 
+
 ~~-Assets for Marksman~~
 
+~~-Rework the code for Runner~~
 
--Rework the code for Runner
 
--Rework the code for Psychic
 
--Rework the code for Headless
+\-Rework the code for Psychic
+
+\-Rework the code for Headless
 
 
 
