@@ -6,11 +6,15 @@ All the roles I wanted to implement for v1 have been implemented, I just need to
 
 ~~-Rework the code for Runner~~
 
+~~-Rework the code for Psychic~~
+
+~~-Rework the code for Headless~~
 
 
-\-Rework the code for Psychic
 
-\-Rework the code for Headless
+\-Polish Marksman
+
+\-rework smokebomb for marksman
 
 
 
