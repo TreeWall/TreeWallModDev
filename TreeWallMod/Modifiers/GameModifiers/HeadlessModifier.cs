@@ -1,36 +1,38 @@
-using TreeWallMod.Options.Modifiers;
 using MiraAPI.GameOptions;
-using MiraAPI.Modifiers.Types;
-using System.Collections.Generic;
-using TownOfUs.Modifiers.Game;
-using TownOfUs.Modules.Wiki;
-using UnityEngine;
-using Il2CppSystem;
-using TownOfUs.Utilities;
-using TreeWallMod.Buttons.Crewmate;
-using TreeWallMod.Modules;
-using TreeWallMod.Options.Roles.Crewmate;
-using TreeWallMod.Roles.Crewmate;
+using MiraAPI.Hud;
 using MiraAPI.Modifiers;
-using Reactor.Utilities;
+using MiraAPI.Patches.Stubs;
+using MiraAPI.Utilities;
+using Reactor.Utilities.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TownOfUs.Buttons;
+using TownOfUs.Events;
+using TownOfUs.Modifiers.Game;
+using TownOfUs.Patches;
+using TownOfUs.Utilities.Appearances;
+using TreeWallMod.Buttons;
+using TreeWallMod.Modules;
+using TreeWallMod.Options.Modifiers;
+using UnityEngine;
+using UnityEngine.UI;
+using static TreeWallMod.Modules.TreeWallModRpcs;
 
 namespace TreeWallMod.Modifiers.GameModifers
 {
 	public sealed class HeadlessModifier : UniversalGameModifier, IWikiDiscoverable
-    {
+	{
 		public override string ModifierName => "Headless";
 		public override bool ShowInFreeplay => true;
 		public override Color FreeplayFileColor => Colors.HeadlessModifier;
 
-		public bool headlessState = false;
-		public PlayerControl killer;
-		public bool Die = false;
+		public PlayerControl? Killer { get; set; }
+		public bool Dead { get; set; } = false;
+		public bool Setup { get; set; }
 
-		public List<ActionButton> DisabledButtons = new List<ActionButton>();
+		public bool KillButton { get; set; } = false;
+		public HeadlessPlayer HeadlessObject { get; set; }
 
 		public override string GetDescription()
 		{
@@ -39,79 +41,101 @@ namespace TreeWallMod.Modifiers.GameModifers
 
 		public string GetAdvancedDescription()
 		{
-			return "Turn into a headless torso when you die, this lasts untill the next round";
+			return "When someone kills you, instead of dying completely, you can move in a headless state and complete tasks (or kill people hehe)";
 		}
 
 		public override int GetAmountPerGame()
 		{
-			return (int)OptionGroupSingleton<UniversalModifierOptions>.Instance.HeadlessAmount;
+			return (int)OptionGroupSingleton<TWUniversalModifierOptions>.Instance.HeadlessAmount;
 		}
 
 		public override int GetAssignmentChance()
 		{
-			return (int)OptionGroupSingleton<UniversalModifierOptions>.Instance.HeadlessChance;
+			return (int)OptionGroupSingleton<TWUniversalModifierOptions>.Instance.HeadlessChance;
 		}
 
-		public override void OnActivate()
+		public override void FixedUpdate()
 		{
-			killer = Player;
-			base.OnActivate();
-			//Message(ReInput.mapping.GetActionCategory("Default").id);
+			base.FixedUpdate();
 
-			//ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false, ControllerType.Keyboard, 0);
+			if (Dead)
+			{
+                Player.cosmetics.gameObject.SetActive(false);
+                Player.cosmetics.currentBodySprite.BodySprite.color = new Color(1, 1, 1, 0);
+            }
+        }
 
-			//if (HudManager.Instance != null && headlessState)
-			//{
-			//	var buttonsParent = HudManager.Instance.transform.Find("Buttons");
-
-			//	if (buttonsParent != null)
-			//	{
-			//		var allButtons = buttonsParent.GetComponentsInChildren<ActionButton>(true);
-			//		foreach (var button in allButtons)
-			//		{
-			//			if (button != HudManager.Instance.PetButton && button != HudManager.Instance.UseButton && button != HudManager.Instance.ReportButton)
-			//			{
-			//				DisabledButtons.Add(button);
-			//			}
-			//		}
-			//	}
-			//}
-		}
-
-		public override void Update()
+		public override void OnDeath(DeathReason reason)
 		{
-			base.Update();
-			//ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false, ControllerType.Keyboard);
+			base.OnDeath(reason);
+			Dead = true;
 
-			//hide buttons
-			//if (HudManager.Instance != null && headlessState)
-			//{
-			//	var buttonsParent = HudManager.Instance.transform.Find("Buttons");
+			var body = Helpers.GetBodyById(Player.PlayerId);
 
-			//	if (buttonsParent != null)
-			//	{
-			//		var allButtons = buttonsParent.GetComponentsInChildren<ActionButton>(true);
-			//		foreach (var button in allButtons)
-			//		{
-			//			if (button != HudManager.Instance.PetButton && button != HudManager.Instance.UseButton && button != HudManager.Instance.ReportButton)
-			//			{
-			//				button.gameObject.SetActive(false);
-			//				button.SetDisabled();
-			//			}
-			//		}
-			//	}
-			//}
+			if (body != null)
+			{
+				body.ClearBody();
+			}
+
+			HeadlessObject =  HeadlessPlayer.Spawn(Player, idleAnim: Assets.Assets.HeadlessIdleAnim.LoadAsset(), walkAnim: Assets.Assets.HeadlessWalkAnim.LoadAsset());
+
+			Player.gameObject.layer = LayerMask.NameToLayer("Players");
+
+			Player.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+			Player.Collider.enabled = true;
+
+			if (Player.AmOwner)
+			{
+				HudManager.Instance.SetHudActive(false);
+				HudManager.Instance.SetHudActive(true);
+				HudManagerPatches.ResetZoom();
+
+				HudManager.Instance.ShadowQuad.gameObject.SetActive(true);
+
+                var killButton = CustomButtonSingleton<HeadlessKillButton>.Instance;
+                killButton.SetTimer(killButton.Cooldown);
+
+                Player.RpcAddModifier<DisableButtonsModifier>();
+			}
 		}
 
 		public override void OnDeactivate()
 		{
 			base.OnDeactivate();
-			//foreach (var button in DisabledButtons)
-			//{
-			//	button.gameObject.SetActive(true);
-			//	button.SetEnabled();
-			//	Message($"Name: {button.name} Tag: {button.tag} Object Class: {button.ObjectClass}");
-			//}
+
+			Message("OnDeactivate Called");
+
+			Player.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+
+			Player.gameObject.layer = LayerMask.NameToLayer("Ghost");
+			Player.Collider.enabled = false;
+
+			if (Player.AmOwner)
+			{
+				HudManager.Instance.SetHudActive(false);
+				HudManager.Instance.SetHudActive(true);
+				HudManagerPatches.ResetZoom();
+
+				HudManager.Instance.ShadowQuad.gameObject.SetActive(false);
+
+				Player.RpcRemoveModifier<DisableButtonsModifier>();
+			}
+
+            Player.cosmetics.gameObject.SetActive(true);
+            Player.cosmetics.currentBodySprite.BodySprite.color = new Color(1, 1, 1, 1);
+
+            if (HeadlessObject != null)
+			{
+				HeadlessObject.Destroy();
+			}
+		}
+
+		public override void OnMeetingStart()
+		{
+			if (Dead)
+			{
+				ModifierComponent!.RemoveModifier(this);
+			}
 		}
 	}
 }

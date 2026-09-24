@@ -4,6 +4,7 @@ using MiraAPI.Modifiers;
 using TownOfUs.Options.Maps;
 using TownOfUs.Patches;
 using TreeWallMod.Modifiers.Crewmate;
+using TreeWallMod.Modifiers.GameModifers;
 using TreeWallMod.Modules;
 using TreeWallMod.Options.Roles.Crewmate;
 using TreeWallMod.Roles.Crewmate;
@@ -25,6 +26,12 @@ namespace TreeWallMod.Patches
             if (runner != null && runner.SpeedActive)
             {
                 __result *= runner.SpeedMultiplier;
+            }
+
+            if (pc.TryGetModifier<HeadlessModifier>(out var headless) && headless.Dead)
+            {
+                // Ghost speed is multiplied by 1.2, so to reverse that, multiply by 0.8333
+                __result *= 0.8333f;
             }
         }
     }

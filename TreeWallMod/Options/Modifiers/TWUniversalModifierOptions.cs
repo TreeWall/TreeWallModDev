@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TreeWallMod.Options.Modifiers
 {
-    public sealed class UniversalModifierOptions : AbstractOptionGroup
+    public sealed class TWUniversalModifierOptions : AbstractOptionGroup
     {
         public override string GroupName => "Headless Modifiers";
         public override MenuCategory ParentMenu => MenuCategory.Modifiers;
@@ -17,7 +17,13 @@ namespace TreeWallMod.Options.Modifiers
         public ModdedNumberOption HeadlessChance { get; } =
             new("Headless Chance", 50f, 0, 100f, 10f, MiraNumberSuffixes.Percent)
             {
-                Visible = () => OptionGroupSingleton<UniversalModifierOptions>.Instance.HeadlessAmount > 0
+                Visible = () => OptionGroupSingleton<TWUniversalModifierOptions>.Instance.HeadlessAmount > 0
+            };
+
+        public ModdedToggleOption HeadlessKillButton { get; } =
+            new("Headless killer gets Kill button", true)
+            {
+                Visible = () => OptionGroupSingleton<TWUniversalModifierOptions>.Instance.HeadlessAmount > 0
             };
     }
 }

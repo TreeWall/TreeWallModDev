@@ -103,7 +103,7 @@ namespace TreeWallMod.Events.Neutral
 			var suppressedPlayers = PlayerControl.AllPlayerControls.ToArray()
 				.Where(x => !x.Data.IsDead && x.HasModifier<MarksmanSuppressedModifier>());
 
-			Message($"{suppressedPlayers.Count()} players are to be Suppressed");
+			//Message($"{suppressedPlayers.Count()} players are to be Suppressed");
 			foreach (var plr in suppressedPlayers)
 			{
 				Message($"Deciding {plr.name}'s fate");

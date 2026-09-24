@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using Il2CppInterop.Runtime.Injection;
 using MiraAPI;
 using MiraAPI.GameOptions;
 using MiraAPI.PluginLoading;
@@ -18,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TreeWallMod.Modules;
 using TreeWallMod.Modules.Localization;
 using TreeWallMod.Options;
 using UnityEngine;
@@ -44,6 +46,17 @@ namespace TreeWallMod
 
             MiraLocaleManager.Register(Id);
             ReactorCredits.Register<TreeWallModPlugin>(ReactorCredits.AlwaysShow);
+
+            if (IsDevBuild) 
+            {    
+                ClassInjector.RegisterTypeInIl2Cpp<DebuggingWindow>();
+
+                GameObject guiObject = new GameObject("ModDebugGuiObject");
+                UnityEngine.Object.DontDestroyOnLoad(guiObject);
+                guiObject.hideFlags = HideFlags.HideAndDontSave;
+
+                guiObject.AddComponent<DebuggingWindow>();
+            }
 
             Patches.ChangeSoundPatch.RegisterSwap("impostor_kill", () =>
             {
